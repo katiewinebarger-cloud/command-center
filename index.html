@@ -969,7 +969,7 @@
     <div class="header-right">
       <div class="header-meta">
         <div id="date-display"></div>
-        <div class="weather">72&deg;F &middot; Partly Cloudy &middot; Austin, TX</div>
+        <div class="weather" id="weather-display">Loading weather...</div>
       </div>
       <div class="clock" id="clock-display"></div>
     </div>
@@ -1326,6 +1326,40 @@
   updateGreeting();
   setInterval(updateClock, 1000);
   setInterval(() => { updateDate(); updateGreeting(); }, 60000);
+
+  // ── Weather (Open-Meteo, San Francisco) ──
+  async function loadWeather() {
+    const el = document.getElementById('weather-display');
+    try {
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=37.7749&longitude=-122.4194&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=America/Los_Angeles';
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error('Weather API error');
+      const data = await resp.json();
+      const temp = Math.round(data.current.temperature_2m);
+      const code = data.current.weather_code;
+      const condition = weatherCondition(code);
+      el.textContent = `${temp}\u00B0F \u00B7 ${condition} \u00B7 San Francisco`;
+    } catch (e) {
+      el.textContent = '-- \u00B7 San Francisco';
+      console.warn('Weather fetch failed:', e);
+    }
+  }
+
+  function weatherCondition(code) {
+    if (code === 0) return 'Clear';
+    if (code <= 3) return 'Partly Cloudy';
+    if (code <= 48) return 'Foggy';
+    if (code <= 57) return 'Drizzle';
+    if (code <= 67) return 'Rain';
+    if (code <= 77) return 'Snow';
+    if (code <= 82) return 'Showers';
+    if (code <= 86) return 'Snow Showers';
+    if (code >= 95) return 'Thunderstorm';
+    return 'Cloudy';
+  }
+
+  loadWeather();
+  setInterval(loadWeather, 600000); // refresh every 10 min
 
   // ── Calendar Loading ──
   async function loadCalendar() {
