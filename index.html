@@ -387,6 +387,147 @@
 
   .task-label { color: var(--text-primary); }
 
+  .task-label a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 11px;
+    margin-left: 6px;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+  }
+
+  .task-label a:hover { opacity: 1; }
+
+  .task-item .event-duration {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  /* ── Task Checklist ── */
+  .checklist-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .checklist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .checklist-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+  }
+
+  .checklist-add {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .checklist-add:hover {
+    border-color: var(--accent-dim);
+    background: rgba(0, 188, 212, 0.08);
+  }
+
+  .checklist-items { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg-input);
+    border-radius: 6px;
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+
+  .checklist-item:hover { background: var(--bg-panel-hover); }
+
+  .checklist-item input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--bg-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.15s;
+  }
+
+  .checklist-item input[type="checkbox"]:checked {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+
+  .checklist-item input[type="checkbox"]:checked::after {
+    content: '\2713';
+    position: absolute;
+    top: -1px;
+    left: 2px;
+    font-size: 12px;
+    color: var(--text-bright);
+  }
+
+  .checklist-item .check-text {
+    flex: 1;
+    color: var(--text-primary);
+  }
+
+  .checklist-item.done .check-text {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    opacity: 0.6;
+  }
+
+  .checklist-item .check-delete {
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    padding: 0 4px;
+  }
+
+  .checklist-item:hover .check-delete { opacity: 0.6; }
+  .checklist-item .check-delete:hover { opacity: 1; color: var(--red); }
+
+  .checklist-input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .checklist-input:focus { border-color: var(--accent-dim); }
+  .checklist-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
+
   /* Detail: Slack full list */
   .message-list { display: flex; flex-direction: column; gap: 10px; }
 
@@ -837,22 +978,13 @@
   <!-- ── Summary Cards ── -->
   <div class="summary-row">
 
-    <!-- Today Card -->
+    <!-- Today Card (populated from calendar.json) -->
     <div class="summary-card" id="card-today" onclick="toggleDetail('today')">
       <div class="card-header">
         <div class="card-title"><span class="live-dot"></span> Today</div>
-        <div class="card-badge">6 events</div>
+        <div class="card-badge" id="today-badge">0 events</div>
       </div>
-      <div class="summary-item">
-        <span class="priority-dot" style="background:var(--red)"></span>
-        <span class="time-badge">9:00a</span>
-        <span class="item-text">Strategy sync w/ leadership</span>
-      </div>
-      <div class="summary-item">
-        <span class="priority-dot" style="background:var(--amber)"></span>
-        <span class="time-badge">10:30a</span>
-        <span class="item-text">Review Q2 market position deck</span>
-      </div>
+      <div id="today-summary"></div>
       <span class="card-expand">click to expand</span>
     </div>
 
@@ -905,32 +1037,18 @@
       <div class="detail-title">Today &mdash; Full Schedule</div>
       <button class="detail-close" onclick="toggleDetail('today')">&#10005; close</button>
     </div>
-    <ul class="task-list">
-      <li class="task-item priority-high">
-        <span class="task-time">9:00a</span>
-        <span class="task-label">Strategy sync w/ leadership</span>
-      </li>
-      <li class="task-item priority-med">
-        <span class="task-time">10:30a</span>
-        <span class="task-label">Review Q2 market position deck</span>
-      </li>
-      <li class="task-item priority-low">
-        <span class="task-time">12:00p</span>
-        <span class="task-label">Lunch &amp; learn: grid modernization</span>
-      </li>
-      <li class="task-item priority-med">
-        <span class="task-time">2:00p</span>
-        <span class="task-label">Product roadmap standup</span>
-      </li>
-      <li class="task-item priority-high">
-        <span class="task-time">4:00p</span>
-        <span class="task-label">Finalize investor update draft</span>
-      </li>
-      <li class="task-item priority-low">
-        <span class="task-time">5:30p</span>
-        <span class="task-label">Wrap-up: review open PRs</span>
-      </li>
-    </ul>
+    <ul class="task-list" id="today-detail-list"></ul>
+    <div class="checklist-section">
+      <div class="checklist-header">
+        <span class="checklist-title">Tasks</span>
+        <button class="checklist-add" onclick="showAddTask()">+ add</button>
+      </div>
+      <ul class="checklist-items" id="checklist"></ul>
+      <input type="text" class="checklist-input" id="checklist-input"
+             placeholder="Type a task and press Enter..."
+             style="display:none"
+             onkeydown="if(event.key==='Enter')addTask(this.value)">
+    </div>
   </div>
 
   <!-- ── Detail Panel (Slack) ── -->
@@ -1209,6 +1327,107 @@
   setInterval(updateClock, 1000);
   setInterval(() => { updateDate(); updateGreeting(); }, 60000);
 
+  // ── Calendar Loading ──
+  async function loadCalendar() {
+    try {
+      const resp = await fetch('calendar.json');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const events = data.events || [];
+
+      // Update summary card (show first 2 events)
+      document.getElementById('today-badge').textContent = `${events.length} event${events.length !== 1 ? 's' : ''}`;
+      const summaryEl = document.getElementById('today-summary');
+      summaryEl.innerHTML = events.slice(0, 2).map(ev => `
+        <div class="summary-item">
+          <span class="priority-dot" style="background:var(${ev.type === 'meeting' ? '--accent' : '--amber'})"></span>
+          <span class="time-badge">${ev.time}</span>
+          <span class="item-text">${ev.title}</span>
+        </div>
+      `).join('');
+
+      // Update detail panel (full timeline)
+      const detailEl = document.getElementById('today-detail-list');
+      detailEl.innerHTML = events.map(ev => {
+        const linkHtml = ev.link ? `<a href="${ev.link}" target="_blank" onclick="event.stopPropagation()">open &rarr;</a>` : '';
+        const durationHtml = ev.endTime ? `<span class="event-duration">${ev.time} – ${ev.endTime}</span>` : '';
+        const priorityClass = ev.type === 'meeting' ? 'priority-med' : 'priority-low';
+        return `
+          <li class="task-item ${priorityClass}">
+            <span class="task-time">${ev.time}</span>
+            <span class="task-label">${ev.title}${linkHtml}</span>
+            ${durationHtml}
+          </li>
+        `;
+      }).join('');
+    } catch (e) {
+      console.warn('Could not load calendar.json:', e);
+    }
+  }
+
+  loadCalendar();
+
+  // ── Task Checklist (localStorage) ──
+  const CHECKLIST_KEY = 'commandcenter-checklist';
+
+  function getChecklist() {
+    try {
+      return JSON.parse(localStorage.getItem(CHECKLIST_KEY)) || [];
+    } catch { return []; }
+  }
+
+  function saveChecklist(items) {
+    localStorage.setItem(CHECKLIST_KEY, JSON.stringify(items));
+  }
+
+  function renderChecklist() {
+    const items = getChecklist();
+    const el = document.getElementById('checklist');
+    el.innerHTML = items.map((item, i) => `
+      <li class="checklist-item ${item.done ? 'done' : ''}">
+        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleCheck(${i})">
+        <span class="check-text">${item.text}</span>
+        <button class="check-delete" onclick="deleteCheck(${i})">&times;</button>
+      </li>
+    `).join('');
+  }
+
+  function showAddTask() {
+    const input = document.getElementById('checklist-input');
+    input.style.display = '';
+    input.focus();
+  }
+
+  function addTask(text) {
+    text = text.trim();
+    if (!text) return;
+    const items = getChecklist();
+    items.push({ text, done: false });
+    saveChecklist(items);
+    renderChecklist();
+    const input = document.getElementById('checklist-input');
+    input.value = '';
+    input.style.display = 'none';
+  }
+
+  function toggleCheck(index) {
+    const items = getChecklist();
+    if (items[index]) {
+      items[index].done = !items[index].done;
+      saveChecklist(items);
+      renderChecklist();
+    }
+  }
+
+  function deleteCheck(index) {
+    const items = getChecklist();
+    items.splice(index, 1);
+    saveChecklist(items);
+    renderChecklist();
+  }
+
+  renderChecklist();
+
   // ── Detail Panel Toggle ──
   let activeDetail = null;
 
@@ -1334,16 +1553,21 @@
       if (items.length === 0) {
         historyEl.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:20px 0;text-align:center;opacity:0.5;">No history yet for this skill.</div>';
       } else {
-        historyEl.innerHTML = items.map((item, i) => `
+        historyEl.innerHTML = items.map((item, i) => {
+          const openLink = item.url
+            ? `<a href="${item.url}" target="_blank" onclick="event.stopPropagation()" style="font-family:var(--font-mono);font-size:10px;color:var(--accent);text-decoration:none;opacity:0.7;margin-right:8px;">open &rarr;</a>`
+            : '';
+          return `
           <div class="history-item" onclick="viewHistoryItem('${activeSkill}', ${i})">
             <div class="history-icon">&#9724;</div>
             <div class="history-info">
               <div class="history-name">${item.name}</div>
               <div class="history-meta">${item.date} &middot; ${item.meta}</div>
             </div>
+            ${openLink}
             <span class="history-badge ${item.badge}">${item.badgeLabel}</span>
           </div>
-        `).join('');
+        `}).join('');
       }
     }
   }
@@ -1359,7 +1583,10 @@
     status.textContent = item.badgeLabel.toUpperCase();
     content.style.display = '';
     historyEl.style.display = 'none';
-    content.innerHTML = item.preview + '<div class="line">&nbsp;</div><div class="line"><span class="muted" style="cursor:pointer" onclick="showPreviewTab(\'history\')">&larr; Back to history</span></div>';
+    const openBtn = item.url
+      ? `<div class="line"><a href="${item.url}" target="_blank" style="color:var(--accent);text-decoration:none;font-family:var(--font-mono);font-size:12px;">Open file &rarr;</a></div><div class="line">&nbsp;</div>`
+      : '';
+    content.innerHTML = item.preview + '<div class="line">&nbsp;</div>' + openBtn + '<div class="line"><span class="muted" style="cursor:pointer" onclick="showPreviewTab(\'history\')">&larr; Back to history</span></div>';
   }
 
   // ── Workbench Actions ──

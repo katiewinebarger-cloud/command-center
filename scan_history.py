@@ -6,6 +6,7 @@ import os
 import hashlib
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 COWORK_DIR = Path(__file__).parent.resolve()
 HOME_DIR = Path.home()
@@ -54,6 +55,29 @@ def infer_badge(name):
 def classify(filepath):
     name_lower = filepath.name.lower()
     ext = filepath.suffix.lower()
+
+    # Historical Content directories
+    historical_dir = COWORK_DIR / "Historical Content"
+    meeting_recaps_dir = historical_dir / "Meeting Recaps"
+    action_items_dir = historical_dir / "Action Items"
+    coaching_reviews_dir = historical_dir / "Coaching Reviews"
+
+    # Also check legacy path
+    legacy_recaps_dir = COWORK_DIR / "Meeting Takeaways" / "Meeting Recaps"
+
+    # Meeting Notes: Meeting Recaps + Action Items
+    if meeting_recaps_dir in filepath.parents or legacy_recaps_dir in filepath.parents:
+        badge, label = infer_badge(filepath.name)
+        return "Meeting Notes", badge, label
+
+    if action_items_dir in filepath.parents:
+        badge, label = infer_badge(filepath.name)
+        return "Meeting Notes", badge, label
+
+    # Executive Coaching: Coaching Reviews directory
+    if coaching_reviews_dir in filepath.parents:
+        badge, label = infer_badge(filepath.name)
+        return "Executive Coaching", badge, label
 
     # Executive Coaching: keyword match on .docx or .pdf
     if ext in (".docx", ".pdf"):
@@ -105,7 +129,10 @@ def should_exclude(filepath):
         return True
     if filepath.name.startswith("~$"):
         return True
-    if filepath.suffix.lower() in EXCLUDE_EXTENSIONS:
+    # Allow .md files inside Historical Content (they are real skill outputs)
+    historical_dir = COWORK_DIR / "Historical Content"
+    in_historical = historical_dir in filepath.parents
+    if filepath.suffix.lower() in EXCLUDE_EXTENSIONS and not in_historical:
         return True
     if any(kw in filepath.name.lower() for kw in ["logo", "sponsor"]):
         return True
@@ -166,7 +193,15 @@ def main():
         if name and name[0].isdigit() and ". " in name[:4]:
             name = name[name.index(". ") + 2:]
 
-        scan_entries.append({
+        # Build a servable URL for files inside the Cowork directory
+        url = None
+        try:
+            rel = fp.relative_to(COWORK_DIR)
+            url = quote(str(rel))
+        except ValueError:
+            pass  # File is outside Cowork dir (e.g. home dir)
+
+        entry = {
             "id": make_id(fp),
             "skill": skill,
             "name": name,
@@ -178,7 +213,11 @@ def main():
             "preview": make_preview(fp, skill, size),
             "source": "scan",
             "filePath": str(fp),
-        })
+        }
+        if url:
+            entry["url"] = url
+
+        scan_entries.append(entry)
 
     # Combine: scan entries + preserved session entries
     all_entries = scan_entries + existing_session_entries

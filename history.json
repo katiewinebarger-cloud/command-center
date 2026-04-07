@@ -1,7 +1,105 @@
 {
   "version": 1,
-  "lastScan": "2026-04-07T09:45:53.166503",
+  "lastScan": "2026-04-07T11:25:18.023368",
   "entries": [
+    {
+      "id": "7fd386b7",
+      "skill": "Company Intel",
+      "name": "Historical Content Index",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "10 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">Historical Content Index</span></div><div class=\"line\">DOCX file &middot; 10 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Historical Content/Historical Content Index.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Historical Content Index.docx",
+      "url": "Historical%20Content/Historical%20Content%20Index.docx"
+    },
+    {
+      "id": "b877cf50",
+      "skill": "Meeting Notes",
+      "name": "Pricing Workshop Convergence - Takeaways 2026-04-02",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "10 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">Pricing Workshop Convergence - Takeaways 2026-04-02</span></div><div class=\"line\">DOCX file &middot; 10 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Meeting Recaps/Pricing Workshop Convergence - Takeaways 2026-04-02.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Meeting Recaps/Pricing Workshop Convergence - Takeaways 2026-04-02.docx",
+      "url": "Historical%20Content/Meeting%20Recaps/Pricing%20Workshop%20Convergence%20-%20Takeaways%202026-04-02.docx"
+    },
+    {
+      "id": "5cc7df12",
+      "skill": "Meeting Notes",
+      "name": "All Meeting Action Items - 2026-04-03",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "10 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">All Meeting Action Items - 2026-04-03</span></div><div class=\"line\">DOCX file &middot; 10 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Action Items/All Meeting Action Items - 2026-04-03.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Action Items/All Meeting Action Items - 2026-04-03.docx",
+      "url": "Historical%20Content/Action%20Items/All%20Meeting%20Action%20Items%20-%202026-04-03.docx"
+    },
+    {
+      "id": "51d5903d",
+      "skill": "Executive Coaching",
+      "name": "Coaching Review - Product GTM Connect 2026-04-03",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "11 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">Coaching Review - Product GTM Connect 2026-04-03</span></div><div class=\"line\">DOCX file &middot; 11 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Coaching Reviews/Coaching Review - Product GTM Connect 2026-04-03.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Coaching Reviews/Coaching Review - Product GTM Connect 2026-04-03.docx",
+      "url": "Historical%20Content/Coaching%20Reviews/Coaching%20Review%20-%20Product%20GTM%20Connect%202026-04-03.docx"
+    },
+    {
+      "id": "0ea3d377",
+      "skill": "Executive Coaching",
+      "name": "Coaching Review - Pricing Workshop 2026-03-31",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "10 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">Coaching Review - Pricing Workshop 2026-03-31</span></div><div class=\"line\">DOCX file &middot; 10 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Coaching Reviews/Coaching Review - Pricing Workshop 2026-03-31.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Coaching Reviews/Coaching Review - Pricing Workshop 2026-03-31.docx",
+      "url": "Historical%20Content/Coaching%20Reviews/Coaching%20Review%20-%20Pricing%20Workshop%202026-03-31.docx"
+    },
+    {
+      "id": "515b9b5e",
+      "skill": "Executive Coaching",
+      "name": "Coaching Review - Agentic AI Productivity LT 2026-04-01",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "11 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">Coaching Review - Agentic AI Productivity LT 2026-04-01</span></div><div class=\"line\">DOCX file &middot; 11 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Coaching Reviews/Coaching Review - Agentic AI Productivity LT 2026-04-01.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Coaching Reviews/Coaching Review - Agentic AI Productivity LT 2026-04-01.docx",
+      "url": "Historical%20Content/Coaching%20Reviews/Coaching%20Review%20-%20Agentic%20AI%20Productivity%20LT%202026-04-01.docx"
+    },
+    {
+      "id": "3cfa3f42",
+      "skill": "Executive Coaching",
+      "name": "Meeting Performance Self-Assessment - Oct 2025 to Feb 2026",
+      "date": "Apr 7, 2026",
+      "dateISO": "2026-04-07",
+      "meta": "10 KB \u00b7 .docx",
+      "badge": "final",
+      "badgeLabel": "Final",
+      "preview": "<div class=\"line\"><span class=\"highlight\">Meeting Performance Self-Assessment - Oct 2025 to Feb 2026</span></div><div class=\"line\">DOCX file &middot; 10 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Coaching Reviews/Meeting Performance Self-Assessment - Oct 2025 to Feb 2026.docx</span></div>",
+      "source": "scan",
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Historical Content/Coaching Reviews/Meeting Performance Self-Assessment - Oct 2025 to Feb 2026.docx",
+      "url": "Historical%20Content/Coaching%20Reviews/Meeting%20Performance%20Self-Assessment%20-%20Oct%202025%20to%20Feb%202026.docx"
+    },
     {
       "id": "0806338b",
       "skill": "PDF",
@@ -26,7 +124,8 @@
       "badgeLabel": "Complete",
       "preview": "<div class=\"line\"><span class=\"highlight\">2026 Coaching Trends_ Essential Skills for Hybrid Leaders</span></div><div class=\"line\">PDF file &middot; 2.6 MB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Claude Cowork/2026 Coaching Trends_ Essential Skills for Hybrid Leaders.pdf</span></div>",
       "source": "scan",
-      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/2026 Coaching Trends_ Essential Skills for Hybrid Leaders.pdf"
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/2026 Coaching Trends_ Essential Skills for Hybrid Leaders.pdf",
+      "url": "2026%20Coaching%20Trends_%20Essential%20Skills%20for%20Hybrid%20Leaders.pdf"
     },
     {
       "id": "11adec6f",
@@ -39,7 +138,8 @@
       "badgeLabel": "Complete",
       "preview": "<div class=\"line\"><span class=\"highlight\">2025 Global Leadership Development Study_ Research Report - Harvard Business Impact</span></div><div class=\"line\">PDF file &middot; 4.4 MB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Claude Cowork/2025 Global Leadership Development Study_ Research Report - Harvard Business Impact.pdf</span></div>",
       "source": "scan",
-      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/2025 Global Leadership Development Study_ Research Report - Harvard Business Impact.pdf"
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/2025 Global Leadership Development Study_ Research Report - Harvard Business Impact.pdf",
+      "url": "2025%20Global%20Leadership%20Development%20Study_%20Research%20Report%20-%20Harvard%20Business%20Impact.pdf"
     },
     {
       "id": "9482fb62",
@@ -130,7 +230,8 @@
       "badgeLabel": "Complete",
       "preview": "<div class=\"line\"><span class=\"highlight\">Meeting_Presence_Self-Assessment</span></div><div class=\"line\">DOCX file &middot; 16 KB</div><div class=\"line\">&nbsp;</div><div class=\"line\"><span class=\"muted\">Source: ~/Self-Assessment/Meeting_Presence_Self-Assessment.docx</span></div>",
       "source": "scan",
-      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Self-Assessment/Meeting_Presence_Self-Assessment.docx"
+      "filePath": "/Users/katiewinebarger-eq/Claude Cowork/Self-Assessment/Meeting_Presence_Self-Assessment.docx",
+      "url": "Self-Assessment/Meeting_Presence_Self-Assessment.docx"
     },
     {
       "id": "e724817f",
