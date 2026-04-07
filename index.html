@@ -250,6 +250,80 @@
     flex-shrink: 0;
   }
 
+  /* Slack mention highlight */
+  .slack-summary-item.has-mention .slack-text,
+  .message.has-mention .message-text {
+    color: var(--amber);
+  }
+
+  .slack-summary-item .unread-badge,
+  .message .unread-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--bg-primary);
+    background: var(--accent);
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0 5px;
+  }
+
+  .unread-badge.mention {
+    background: var(--amber);
+  }
+
+  .message .channel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    background: rgba(0, 188, 212, 0.04);
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .message .channel-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-bright);
+  }
+
+  .message .channel-time {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-left: auto;
+  }
+
+  .message.has-mention .channel-header {
+    background: rgba(240, 165, 0, 0.06);
+  }
+
+  .slack-refresh {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-left: auto;
+  }
+
+  .slack-refresh:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+  }
+
   /* Energy summary items */
   .energy-summary-item {
     display: flex;
@@ -988,22 +1062,13 @@
       <span class="card-expand">click to expand</span>
     </div>
 
-    <!-- Slack Pulse Card -->
+    <!-- Slack Pulse Card (populated from slack-pulse.json) -->
     <div class="summary-card" id="card-slack" onclick="toggleDetail('slack')">
       <div class="card-header">
         <div class="card-title"><span class="live-dot"></span> Slack Pulse</div>
-        <div class="card-badge">4 unread</div>
+        <div class="card-badge" id="slack-badge">0 unread</div>
       </div>
-      <div class="slack-summary-item">
-        <div class="mini-avatar" style="background:#2ecc71">MR</div>
-        <span class="slack-text">Updated competitive landscape section</span>
-        <span class="slack-channel">#strategy</span>
-      </div>
-      <div class="slack-summary-item">
-        <div class="mini-avatar" style="background:#9b59b6">SL</div>
-        <span class="slack-text">ERCOT day-ahead cleared higher than expected</span>
-        <span class="slack-channel">#market-ops</span>
-      </div>
+      <div id="slack-summary"></div>
       <span class="card-expand">click to expand</span>
     </div>
 
@@ -1054,51 +1119,11 @@
   <!-- ── Detail Panel (Slack) ── -->
   <div class="detail-panel" id="detail-slack">
     <div class="detail-header">
-      <div class="detail-title">Slack Pulse &mdash; All Messages</div>
+      <div class="detail-title">Slack Pulse &mdash; All Channels</div>
+      <button class="slack-refresh" onclick="event.stopPropagation(); loadSlack();">&#8635; refresh</button>
       <button class="detail-close" onclick="toggleDetail('slack')">&#10005; close</button>
     </div>
-    <div class="message-list">
-      <div class="message">
-        <div class="message-avatar" style="background:#2ecc71">MR</div>
-        <div class="message-body">
-          <div class="message-header">
-            <span class="message-sender">Maya R.</span>
-            <span class="message-channel">#strategy</span>
-          </div>
-          <div class="message-text">Updated the competitive landscape section &mdash; ready for your eyes</div>
-        </div>
-      </div>
-      <div class="message">
-        <div class="message-avatar" style="background:#f0a500">JK</div>
-        <div class="message-body">
-          <div class="message-header">
-            <span class="message-sender">James K.</span>
-            <span class="message-channel">#eng-platform</span>
-          </div>
-          <div class="message-text">Deployment pipeline green across all envs. v2.4.1 is live.</div>
-        </div>
-      </div>
-      <div class="message">
-        <div class="message-avatar" style="background:#9b59b6">SL</div>
-        <div class="message-body">
-          <div class="message-header">
-            <span class="message-sender">Sara L.</span>
-            <span class="message-channel">#market-ops</span>
-          </div>
-          <div class="message-text">ERCOT day-ahead cleared higher than expected. Notes in thread.</div>
-        </div>
-      </div>
-      <div class="message">
-        <div class="message-avatar" style="background:#00bcd4">TP</div>
-        <div class="message-body">
-          <div class="message-header">
-            <span class="message-sender">Tom P.</span>
-            <span class="message-channel">#general</span>
-          </div>
-          <div class="message-text">Reminder: team offsite logistics doc shared in #events</div>
-        </div>
-      </div>
-    </div>
+    <div class="message-list" id="slack-detail-list"></div>
   </div>
 
   <!-- ── Detail Panel (Energy) ── -->
@@ -1400,6 +1425,81 @@
   }
 
   loadCalendar();
+
+  // ── Slack Pulse Loading ──
+  async function loadSlack() {
+    try {
+      const resp = await fetch('slack-pulse.json');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const channels = data.channels || [];
+
+      // Total unread + mention count
+      const totalUnread = channels.reduce((sum, ch) => sum + ch.unread, 0);
+      const mentionCount = channels.filter(ch => ch.mention).length;
+      const badgeEl = document.getElementById('slack-badge');
+      badgeEl.textContent = mentionCount > 0
+        ? `${totalUnread} unread · ${mentionCount} @mention${mentionCount > 1 ? 's' : ''}`
+        : `${totalUnread} unread`;
+
+      // Sort: mentions first, then by unread count desc
+      const sorted = [...channels].sort((a, b) => {
+        if (a.mention !== b.mention) return b.mention - a.mention;
+        return b.unread - a.unread;
+      });
+
+      // Summary card (top 2 channels)
+      const summaryEl = document.getElementById('slack-summary');
+      summaryEl.innerHTML = sorted.slice(0, 2).map(ch => {
+        const mentionClass = ch.mention ? ' has-mention' : '';
+        const msg = ch.latest;
+        return `
+          <div class="slack-summary-item${mentionClass}">
+            <div class="mini-avatar" style="background:${msg.color}">${msg.initials}</div>
+            <span class="slack-text">${escapeHtml(msg.text)}</span>
+            ${ch.unread > 0 ? `<span class="unread-badge${ch.mention ? ' mention' : ''}">${ch.unread}</span>` : ''}
+            <span class="slack-channel">${ch.name}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Detail panel (all channels)
+      const detailEl = document.getElementById('slack-detail-list');
+      detailEl.innerHTML = sorted.map(ch => {
+        const msg = ch.latest;
+        const mentionClass = ch.mention ? ' has-mention' : '';
+        const unreadBadge = ch.unread > 0
+          ? `<span class="unread-badge${ch.mention ? ' mention' : ''}">${ch.unread}</span>`
+          : '';
+        return `
+          <div class="message${mentionClass}">
+            <div class="channel-header">
+              <span class="channel-name">${ch.name}</span>
+              ${unreadBadge}
+              <span class="channel-time">${msg.time}</span>
+            </div>
+            <div style="display:flex;gap:10px;padding:10px 12px;">
+              <div class="message-avatar" style="background:${msg.color}">${msg.initials}</div>
+              <div class="message-body">
+                <div class="message-header">
+                  <span class="message-sender">${escapeHtml(msg.sender)}</span>
+                </div>
+                <div class="message-text">${escapeHtml(msg.text)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      console.warn('Could not load slack-pulse.json:', e);
+    }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  loadSlack();
 
   // ── Task Checklist (localStorage) ──
   const CHECKLIST_KEY = 'commandcenter-checklist';

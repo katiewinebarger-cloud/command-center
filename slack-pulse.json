@@ -1,0 +1,89 @@
+{
+  "lastUpdated": "2026-04-07T12:30:00-05:00",
+  "channels": [
+    {
+      "name": "#strategy",
+      "unread": 3,
+      "mention": true,
+      "latest": {
+        "sender": "Maya R.",
+        "initials": "MR",
+        "color": "#2ecc71",
+        "text": "@katie Updated the competitive landscape section — ready for your eyes",
+        "time": "11:42a"
+      }
+    },
+    {
+      "name": "#market-ops",
+      "unread": 5,
+      "mention": true,
+      "latest": {
+        "sender": "Sara L.",
+        "initials": "SL",
+        "color": "#9b59b6",
+        "text": "@katie ERCOT day-ahead cleared higher than expected. Notes in thread.",
+        "time": "11:15a"
+      }
+    },
+    {
+      "name": "#eng-platform",
+      "unread": 2,
+      "mention": false,
+      "latest": {
+        "sender": "James K.",
+        "initials": "JK",
+        "color": "#f0a500",
+        "text": "Deployment pipeline green across all envs. v2.4.1 is live.",
+        "time": "10:58a"
+      }
+    },
+    {
+      "name": "#product",
+      "unread": 1,
+      "mention": false,
+      "latest": {
+        "sender": "Carolyn W.",
+        "initials": "CW",
+        "color": "#e74c3c",
+        "text": "Solutions Arch meeting notes posted — action items flagged for review",
+        "time": "10:30a"
+      }
+    },
+    {
+      "name": "#general",
+      "unread": 0,
+      "mention": false,
+      "latest": {
+        "sender": "Tom P.",
+        "initials": "TP",
+        "color": "#00bcd4",
+        "text": "Reminder: team offsite logistics doc shared in #events",
+        "time": "9:45a"
+      }
+    },
+    {
+      "name": "#bp-account",
+      "unread": 4,
+      "mention": true,
+      "latest": {
+        "sender": "Meredith D.",
+        "initials": "MD",
+        "color": "#1abc9c",
+        "text": "@katie bp commercial entry prep doc is ready — flagged a few open questions",
+        "time": "9:20a"
+      }
+    },
+    {
+      "name": "#gtm",
+      "unread": 1,
+      "mention": false,
+      "latest": {
+        "sender": "Alex T.",
+        "initials": "AT",
+        "color": "#e67e22",
+        "text": "Updated pricing deck with new competitive positioning slides",
+        "time": "8:50a"
+      }
+    }
+  ]
+}
