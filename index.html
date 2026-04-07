@@ -779,6 +779,121 @@
     line-height: 1.3;
   }
 
+  .skill-card .top-skill-badge {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 2px;
+    opacity: 0.6;
+  }
+
+  /* ── Skills Library ── */
+  .skills-library-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .skills-library-toggle .toggle-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+
+  .skills-library-toggle:hover .toggle-label {
+    color: var(--text-primary);
+  }
+
+  .skills-library-toggle .toggle-arrow {
+    font-size: 10px;
+    color: var(--text-secondary);
+    transition: transform 0.3s, color 0.2s;
+  }
+
+  .skills-library-toggle:hover .toggle-arrow {
+    color: var(--text-primary);
+  }
+
+  .skills-library-toggle.open .toggle-arrow {
+    transform: rotate(90deg);
+  }
+
+  .skills-library-toggle .toggle-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .skills-library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 10px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+    margin-top: 0;
+  }
+
+  .skills-library-grid.open {
+    max-height: 500px;
+    opacity: 1;
+    margin-top: 10px;
+  }
+
+  /* ── Skill Output — Run & History Tabs ── */
+  .skill-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 12px;
+  }
+
+  .skill-tab {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .skill-tab:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+  .skill-tab:last-child { border-radius: 0 var(--radius) var(--radius) 0; border-left: none; }
+
+  .skill-tab.active {
+    background: rgba(0, 188, 212, 0.08);
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  .skill-tab .tab-count {
+    font-size: 9px;
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 8px;
+    margin-left: 4px;
+  }
+
+  .skill-tab.active .tab-count {
+    background: rgba(0, 188, 212, 0.15);
+  }
+
   /* ── Skill Output Slide-Down ── */
   .skill-output-panel {
     overflow: hidden;
@@ -1573,6 +1688,14 @@
     <div class="skills-grid" id="skills-grid">
       <!-- Populated from skills.json -->
     </div>
+    <div class="skills-library-toggle" id="library-toggle" onclick="toggleSkillsLibrary()">
+      <span class="toggle-arrow">&#9654;</span>
+      <span class="toggle-label">Skills Library</span>
+      <span class="toggle-line"></span>
+    </div>
+    <div class="skills-library-grid" id="skills-library-grid">
+      <!-- Populated from skills.json library -->
+    </div>
     <div class="skill-output-panel" id="skill-output-panel">
       <div class="skill-output-inner">
         <div class="skill-output-header">
@@ -1582,8 +1705,12 @@
             <button onclick="rerunSkill()">regenerate</button>
           </div>
         </div>
+        <div class="skill-tabs" id="skill-tabs" style="display:none;">
+          <button class="skill-tab active" onclick="switchSkillTab('run')">Run</button>
+          <button class="skill-tab" onclick="switchSkillTab('history')">History <span class="tab-count" id="skill-history-count">0</span></button>
+        </div>
         <div class="skill-input-row" id="skill-input-row" style="display:none;">
-          <input type="text" id="skill-input" placeholder="">
+          <input type="text" id="skill-input" placeholder="" onkeydown="if(event.key==='Enter')runSkill()">
           <button id="skill-run-btn" onclick="runSkill()">Generate</button>
         </div>
         <div class="skill-output-body" id="skill-output-body"></div>
@@ -1959,7 +2086,9 @@
 
   // ── Skills (loaded from skills.json) ──
   let skillsData = [];
+  let libraryData = [];
   let activeSkillId = null;
+  let activeSkillTab = 'run';
   let lastSkillOutput = '';
   let skillHistory = {};
 
@@ -1969,7 +2098,9 @@
       if (!resp.ok) return;
       const data = await resp.json();
       skillsData = data.skills || [];
+      libraryData = data.library || [];
       renderSkillCards();
+      renderLibraryCards();
     } catch (e) {
       console.warn('Could not load skills.json:', e);
     }
@@ -1982,8 +2113,28 @@
         <div class="skill-icon">${skill.icon}</div>
         <div class="skill-name">${escapeHtml(skill.name)}</div>
         <div class="skill-desc">${escapeHtml(skill.description)}</div>
+        ${skill.topSkill ? '<div class="top-skill-badge">top skill</div>' : ''}
       </div>
     `).join('');
+  }
+
+  function renderLibraryCards() {
+    const grid = document.getElementById('skills-library-grid');
+    if (!grid || libraryData.length === 0) return;
+    grid.innerHTML = libraryData.map(skill => `
+      <div class="skill-card" data-skill-id="${skill.id}" onclick="activateSkill('${skill.id}', true)">
+        <div class="skill-icon">${skill.icon}</div>
+        <div class="skill-name">${escapeHtml(skill.name)}</div>
+        <div class="skill-desc">${escapeHtml(skill.description)}</div>
+      </div>
+    `).join('');
+  }
+
+  function toggleSkillsLibrary() {
+    const toggle = document.getElementById('library-toggle');
+    const grid = document.getElementById('skills-library-grid');
+    toggle.classList.toggle('open');
+    grid.classList.toggle('open');
   }
 
   async function loadHistory() {
@@ -2007,11 +2158,16 @@
   loadSkills();
   loadHistory();
 
-  function activateSkill(id) {
-    const skill = skillsData.find(s => s.id === id);
+  function getSkill(id) {
+    return skillsData.find(s => s.id === id) || libraryData.find(s => s.id === id);
+  }
+
+  function activateSkill(id, fromLibrary) {
+    const skill = getSkill(id);
     if (!skill) return;
 
     activeSkillId = id;
+    activeSkillTab = 'run';
     lastSkillOutput = '';
 
     // Highlight active card
@@ -2025,13 +2181,70 @@
     const inputRow = document.getElementById('skill-input-row');
     const input = document.getElementById('skill-input');
     const copyBtn = document.getElementById('skill-copy-btn');
+    const tabs = document.getElementById('skill-tabs');
 
     label.textContent = skill.name;
-    copyBtn.parentElement.style.display = 'none'; // hide actions until output
+    copyBtn.parentElement.style.display = 'none';
 
-    // If this is a history-only skill (Meeting Takeaways, Executive Coaching)
+    // Skills with history get Run + History tabs
     if (skill.historySkill) {
+      const items = skillHistory[skill.historySkill] || [];
+      tabs.style.display = 'flex';
+      document.getElementById('skill-history-count').textContent = items.length;
+      // Show Run tab by default
+      switchSkillTab('run');
+    } else {
+      tabs.style.display = 'none';
+    }
+
+    // Show the run interface
+    if (skill.system) {
+      inputRow.style.display = 'flex';
+      input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
+      input.value = '';
+
+      if (skill.prompt && !skill.historySkill) {
+        // Has a default prompt and no history — auto-run
+        body.innerHTML = '<div class="skill-loading"><div class="spinner"></div>Generating with Claude...</div>';
+        panel.classList.add('open');
+        executeSkill(skill, skill.prompt, '');
+      } else {
+        body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter ${skill.inputLabel ? skill.inputLabel.toLowerCase() : 'a prompt'} above and click Generate.</p>`;
+        panel.classList.add('open');
+        input.focus();
+      }
+    } else {
       inputRow.style.display = 'none';
+      body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">This skill is not yet configured for API generation.</p>`;
+      panel.classList.add('open');
+    }
+  }
+
+  function switchSkillTab(tab) {
+    activeSkillTab = tab;
+    const skill = getSkill(activeSkillId);
+    if (!skill) return;
+
+    const body = document.getElementById('skill-output-body');
+    const inputRow = document.getElementById('skill-input-row');
+    const input = document.getElementById('skill-input');
+    const copyBtn = document.getElementById('skill-copy-btn');
+    const tabBtns = document.querySelectorAll('.skill-tab');
+
+    tabBtns.forEach(t => t.classList.remove('active'));
+
+    if (tab === 'run') {
+      tabBtns[0].classList.add('active');
+      inputRow.style.display = 'flex';
+      input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
+      if (!lastSkillOutput) {
+        copyBtn.parentElement.style.display = 'none';
+        body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter ${skill.inputLabel ? skill.inputLabel.toLowerCase() : 'a prompt'} above and click Generate.</p>`;
+      }
+    } else {
+      tabBtns[1].classList.add('active');
+      inputRow.style.display = 'none';
+      copyBtn.parentElement.style.display = 'none';
       const items = skillHistory[skill.historySkill] || [];
       if (items.length === 0) {
         body.innerHTML = '<p style="color:var(--text-secondary);opacity:0.5;">No history yet for this skill.</p>';
@@ -2053,31 +2266,12 @@
           `;
         }).join('');
       }
-      panel.classList.add('open');
-      return;
-    }
-
-    // API-powered skill — show input + auto-run if prompt is preset
-    inputRow.style.display = 'flex';
-    input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
-    input.value = '';
-
-    if (skill.prompt) {
-      // Has a default prompt — auto-run immediately
-      body.innerHTML = '<div class="skill-loading"><div class="spinner"></div>Generating with Claude...</div>';
-      panel.classList.add('open');
-      executeSkill(skill, skill.prompt, '');
-    } else {
-      // Needs input — show empty state
-      body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter a ${skill.inputLabel || 'prompt'} above and click Generate.</p>`;
-      panel.classList.add('open');
-      input.focus();
     }
   }
 
   function runSkill() {
-    const skill = skillsData.find(s => s.id === activeSkillId);
-    if (!skill) return;
+    const skill = getSkill(activeSkillId);
+    if (!skill || !skill.system) return;
     const input = document.getElementById('skill-input').value.trim();
     if (!input && !skill.prompt) return;
 
@@ -2093,8 +2287,7 @@
   }
 
   function rerunSkill() {
-    const skill = skillsData.find(s => s.id === activeSkillId);
-    if (!skill || skill.historySkill) return;
+    if (!activeSkillId) return;
     runSkill();
   }
 
