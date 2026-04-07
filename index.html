@@ -745,20 +745,24 @@
 
   .skill-card:hover {
     background: var(--bg-panel-hover);
-    border-color: var(--accent-dim);
-    box-shadow: 0 0 20px var(--accent-glow);
+    border-color: rgba(255,255,255,0.15);
     transform: translateY(-2px);
   }
 
+  .skill-card.active {
+    border-color: var(--accent-dim);
+    background: rgba(0, 188, 212, 0.05);
+  }
+
   .skill-card .skill-icon {
-    font-size: 24px;
-    width: 44px;
-    height: 44px;
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background: rgba(0, 188, 212, 0.08);
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .skill-card .skill-name {
@@ -775,30 +779,166 @@
     line-height: 1.3;
   }
 
-  .skill-card.featured {
-    background: rgba(0, 188, 212, 0.06);
-    border-color: var(--accent-dim);
-    grid-row: span 1;
+  /* ── Skill Output Slide-Down ── */
+  .skill-output-panel {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+    margin-top: 0;
   }
 
-  .skill-card.featured .skill-icon {
-    background: rgba(0, 188, 212, 0.15);
+  .skill-output-panel.open {
+    max-height: 800px;
+    opacity: 1;
+    margin-top: 14px;
   }
 
-  .skill-card.featured .skill-name {
-    color: var(--accent);
+  .skill-output-inner {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
   }
 
-  .skill-card.featured .featured-badge {
+  .skill-output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-output-label {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--accent);
-    background: rgba(0, 188, 212, 0.1);
-    padding: 2px 6px;
+  }
+
+  .skill-output-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .skill-output-actions button {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .skill-output-actions button:hover {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  .skill-output-actions button.copied {
+    color: #2ecc71;
+    border-color: #2ecc71;
+  }
+
+  .skill-output-body {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-primary);
+  }
+
+  .skill-output-body h1, .skill-output-body h2, .skill-output-body h3 {
+    font-family: var(--font-mono);
+    color: var(--text-bright);
+    margin: 14px 0 6px;
+  }
+  .skill-output-body h1 { font-size: 16px; }
+  .skill-output-body h2 { font-size: 14px; }
+  .skill-output-body h3 { font-size: 13px; color: var(--accent); }
+  .skill-output-body p { margin: 8px 0; }
+  .skill-output-body ul, .skill-output-body ol { margin: 8px 0 8px 20px; }
+  .skill-output-body li { margin: 4px 0; }
+  .skill-output-body strong { color: var(--text-bright); }
+  .skill-output-body code {
+    background: rgba(0,188,212,0.08);
+    padding: 1px 5px;
     border-radius: 3px;
-    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .skill-output-body blockquote {
+    border-left: 3px solid var(--accent-dim);
+    padding-left: 12px;
+    margin: 8px 0;
+    color: var(--text-secondary);
+  }
+
+  .skill-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .skill-input-row input {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 8px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .skill-input-row input:focus {
+    border-color: var(--accent-dim);
+  }
+
+  .skill-input-row input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.4;
+  }
+
+  .skill-input-row button {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--accent);
+    color: var(--bg-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .skill-input-row button:hover { opacity: 0.85; }
+  .skill-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .skill-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    padding: 20px 0;
+  }
+
+  .skill-loading .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
   }
 
   /* ── Content Workbench ── */
@@ -1430,48 +1570,23 @@
   <!-- ── Cowork Skills ── -->
   <div class="panel">
     <div class="panel-title">Cowork Skills</div>
-    <div class="skills-grid">
-      <div class="skill-card featured" onclick="activateSkill(this, 'Meeting Notes')">
-        <div class="skill-icon">&#9992;</div>
-        <div class="skill-name">Meeting Takeaways</div>
-        <div class="skill-desc">Takeaways, actions &amp; Slack drafts</div>
-        <div class="featured-badge">top skill</div>
-      </div>
-      <div class="skill-card featured" onclick="activateSkill(this, 'Executive Coaching')">
-        <div class="skill-icon">&#9878;</div>
-        <div class="skill-name">Executive Coaching</div>
-        <div class="skill-desc">Leadership insights &amp; self-assessment</div>
-        <div class="featured-badge">top skill</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'Slides')">
-        <div class="skill-icon">&#9654;</div>
-        <div class="skill-name">Slides</div>
-        <div class="skill-desc">Create EQ presentations</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'Spreadsheets')">
-        <div class="skill-icon">&#9638;</div>
-        <div class="skill-name">Spreadsheets</div>
-        <div class="skill-desc">Build &amp; analyze .xlsx</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'PDF')">
-        <div class="skill-icon">&#9744;</div>
-        <div class="skill-name">PDF</div>
-        <div class="skill-desc">Merge, split, extract</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'Company Intel')">
-        <div class="skill-icon">&#9733;</div>
-        <div class="skill-name">EQ Context</div>
-        <div class="skill-desc">Strategy &amp; company info</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'API Builder')">
-        <div class="skill-icon">&#10094;&#10095;</div>
-        <div class="skill-name">Claude API</div>
-        <div class="skill-desc">Build with Anthropic SDK</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'Scheduler')">
-        <div class="skill-icon">&#8986;</div>
-        <div class="skill-name">Schedule</div>
-        <div class="skill-desc">Recurring tasks</div>
+    <div class="skills-grid" id="skills-grid">
+      <!-- Populated from skills.json -->
+    </div>
+    <div class="skill-output-panel" id="skill-output-panel">
+      <div class="skill-output-inner">
+        <div class="skill-output-header">
+          <span class="skill-output-label" id="skill-output-label">Output</span>
+          <div class="skill-output-actions">
+            <button id="skill-copy-btn" onclick="copySkillOutput()">copy</button>
+            <button onclick="rerunSkill()">regenerate</button>
+          </div>
+        </div>
+        <div class="skill-input-row" id="skill-input-row" style="display:none;">
+          <input type="text" id="skill-input" placeholder="">
+          <button id="skill-run-btn" onclick="runSkill()">Generate</button>
+        </div>
+        <div class="skill-output-body" id="skill-output-body"></div>
       </div>
     </div>
   </div>
@@ -1842,145 +1957,211 @@
     }, 50);
   }
 
-  // ── Skills ──
-  let activeSkill = null;
-  let activeSkillNewContent = '';
+  // ── Skills (loaded from skills.json) ──
+  let skillsData = [];
+  let activeSkillId = null;
+  let lastSkillOutput = '';
+  let skillHistory = {};
 
-  const skillNewContent = {
-    'Meeting Notes': '<div class="line"><span class="highlight">Meeting Takeaways Engine</span></div><div class="line">Input: raw notes or transcript</div><div class="line">Output: action items, owners, deadlines</div><div class="line">Format: Slack-ready message</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Paste meeting notes to process...</span></div>',
-    'Executive Coaching': '<div class="line"><span class="highlight">Executive Coaching Suite</span></div><div class="line">&nbsp;</div><div class="line">&bull; Leadership self-assessment &amp; reflection</div><div class="line">&bull; Coaching conversation prep</div><div class="line">&bull; 360 feedback synthesis</div><div class="line">&bull; Development goal tracking</div><div class="line">&bull; Communication style insights</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Start a coaching session...</span></div>',
-    'Slides': '<div class="line"><span class="highlight">Deck initialized:</span> EQ Q2 Strategy Update</div><div class="line">Template: Equilibrium Energy branded</div><div class="line">Slides: Title, Agenda, Market Overview, Financials, Next Steps</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready to generate slide content...</span></div>',
-    'Spreadsheets': '<div class="line"><span class="highlight">Workbook:</span> market_analysis_q2.xlsx</div><div class="line">Sheets: Raw Data | Pivot | Charts | Summary</div><div class="line">Formulas: VLOOKUP, conditional formatting, sparklines</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready for data import...</span></div>',
-    'PDF': '<div class="line"><span class="highlight">PDF Tools</span></div><div class="line">&bull; Merge multiple PDFs into one</div><div class="line">&bull; Split by page range</div><div class="line">&bull; Extract text and tables</div><div class="line">&bull; Add watermarks</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Drop a file to begin...</span></div>',
-    'Company Intel': '<div class="line"><span class="highlight">EQ Knowledge Base</span></div><div class="line">&bull; Company strategy &amp; positioning</div><div class="line">&bull; Product direction &amp; roadmap</div><div class="line">&bull; Brand voice guidelines</div><div class="line">&bull; Team &amp; org context</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ask anything about EQ...</span></div>',
-    'API Builder': '<div class="line"><span class="highlight">Claude API Workspace</span></div><div class="line">SDK: @anthropic-ai/sdk (latest)</div><div class="line">Model: claude-opus-4-6</div><div class="line">Tools: function calling, streaming, batches</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Describe what you want to build...</span></div>',
-    'Scheduler': '<div class="line"><span class="highlight">Task Scheduler</span></div><div class="line">Active tasks: 3</div><div class="line">&bull; Daily market report &mdash; 7:00 AM</div><div class="line">&bull; Slack digest &mdash; every 4 hours</div><div class="line">&bull; PR review reminder &mdash; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Create a new scheduled task...</span></div>',
-  };
+  async function loadSkills() {
+    try {
+      const resp = await fetch('skills.json');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      skillsData = data.skills || [];
+      renderSkillCards();
+    } catch (e) {
+      console.warn('Could not load skills.json:', e);
+    }
+  }
 
-  let skillHistory = {
-    'Meeting Notes': [], 'Executive Coaching': [], 'Slides': [],
-    'Spreadsheets': [], 'PDF': [], 'Company Intel': [],
-    'API Builder': [], 'Scheduler': [],
-  };
+  function renderSkillCards() {
+    const grid = document.getElementById('skills-grid');
+    grid.innerHTML = skillsData.map(skill => `
+      <div class="skill-card" data-skill-id="${skill.id}" onclick="activateSkill('${skill.id}')">
+        <div class="skill-icon">${skill.icon}</div>
+        <div class="skill-name">${escapeHtml(skill.name)}</div>
+        <div class="skill-desc">${escapeHtml(skill.description)}</div>
+      </div>
+    `).join('');
+  }
 
   async function loadHistory() {
     try {
       const resp = await fetch('history.json');
       if (!resp.ok) return;
       const data = await resp.json();
-      Object.keys(skillHistory).forEach(k => skillHistory[k] = []);
+      skillHistory = {};
       for (const entry of data.entries) {
-        if (skillHistory[entry.skill]) {
-          skillHistory[entry.skill].push(entry);
-        }
+        if (!skillHistory[entry.skill]) skillHistory[entry.skill] = [];
+        skillHistory[entry.skill].push(entry);
       }
       Object.values(skillHistory).forEach(arr =>
         arr.sort((a, b) => (b.dateISO || '').localeCompare(a.dateISO || ''))
       );
-      if (activeSkill) {
-        document.getElementById('history-count').textContent =
-          (skillHistory[activeSkill] || []).length;
-      }
     } catch (e) {
       console.warn('Could not load history.json:', e);
     }
   }
 
+  loadSkills();
   loadHistory();
 
-  function activateSkill(el, name) {
-    document.querySelectorAll('.skill-card').forEach(c => {
-      if (!c.classList.contains('featured')) c.style.borderColor = '';
-      else c.style.borderColor = '';
-    });
-    el.style.borderColor = 'var(--accent)';
+  function activateSkill(id) {
+    const skill = skillsData.find(s => s.id === id);
+    if (!skill) return;
 
-    activeSkill = name;
-    activeSkillNewContent = skillNewContent[name] || '';
+    activeSkillId = id;
+    lastSkillOutput = '';
 
-    const title = document.getElementById('preview-title');
-    const tabs = document.getElementById('preview-tabs');
-    const count = document.getElementById('history-count');
-    const history = skillHistory[name] || [];
+    // Highlight active card
+    document.querySelectorAll('.skill-card').forEach(c => c.classList.remove('active'));
+    const card = document.querySelector(`[data-skill-id="${id}"]`);
+    if (card) card.classList.add('active');
 
-    title.textContent = `OUTPUT PREVIEW \u2014 ${name.toUpperCase()}`;
-    tabs.style.display = 'flex';
-    count.textContent = history.length;
+    const panel = document.getElementById('skill-output-panel');
+    const label = document.getElementById('skill-output-label');
+    const body = document.getElementById('skill-output-body');
+    const inputRow = document.getElementById('skill-input-row');
+    const input = document.getElementById('skill-input');
+    const copyBtn = document.getElementById('skill-copy-btn');
 
-    showPreviewTab('new');
-  }
+    label.textContent = skill.name;
+    copyBtn.parentElement.style.display = 'none'; // hide actions until output
 
-  function showPreviewTab(tab) {
-    const content = document.getElementById('preview-content');
-    const historyEl = document.getElementById('preview-history');
-    const status = document.getElementById('preview-status');
-    const tabs = document.querySelectorAll('.preview-tab');
-
-    tabs.forEach(t => t.classList.remove('active'));
-
-    if (tab === 'new') {
-      tabs[0].classList.add('active');
-      content.style.display = '';
-      historyEl.style.display = 'none';
-      content.innerHTML = activeSkillNewContent;
-      status.textContent = 'READY';
-    } else {
-      tabs[1].classList.add('active');
-      content.style.display = 'none';
-      historyEl.style.display = '';
-      status.textContent = 'HISTORY';
-
-      const items = skillHistory[activeSkill] || [];
+    // If this is a history-only skill (Meeting Takeaways, Executive Coaching)
+    if (skill.historySkill) {
+      inputRow.style.display = 'none';
+      const items = skillHistory[skill.historySkill] || [];
       if (items.length === 0) {
-        historyEl.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:20px 0;text-align:center;opacity:0.5;">No history yet for this skill.</div>';
+        body.innerHTML = '<p style="color:var(--text-secondary);opacity:0.5;">No history yet for this skill.</p>';
       } else {
-        historyEl.innerHTML = items.map((item, i) => {
+        body.innerHTML = items.map(item => {
           const openLink = item.url
-            ? `<a href="${item.url}" target="_blank" onclick="event.stopPropagation()" style="font-family:var(--font-mono);font-size:10px;color:var(--accent);text-decoration:none;opacity:0.7;margin-right:8px;">open &rarr;</a>`
+            ? `<a href="${item.url}" target="_blank" style="font-family:var(--font-mono);font-size:10px;color:var(--accent);text-decoration:none;opacity:0.7;">open &rarr;</a>`
             : '';
           return `
-          <div class="history-item" onclick="viewHistoryItem('${activeSkill}', ${i})">
-            <div class="history-icon">&#9724;</div>
-            <div class="history-info">
-              <div class="history-name">${item.name}</div>
-              <div class="history-meta">${item.date} &middot; ${item.meta}</div>
+            <div class="history-item" style="cursor:default;">
+              <div class="history-icon">&#9724;</div>
+              <div class="history-info">
+                <div class="history-name">${escapeHtml(item.name)}</div>
+                <div class="history-meta">${item.date} &middot; ${item.meta}</div>
+              </div>
+              ${openLink}
+              <span class="history-badge ${item.badge}">${item.badgeLabel}</span>
             </div>
-            ${openLink}
-            <span class="history-badge ${item.badge}">${item.badgeLabel}</span>
-          </div>
-        `}).join('');
+          `;
+        }).join('');
       }
+      panel.classList.add('open');
+      return;
+    }
+
+    // API-powered skill — show input + auto-run if prompt is preset
+    inputRow.style.display = 'flex';
+    input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
+    input.value = '';
+
+    if (skill.prompt) {
+      // Has a default prompt — auto-run immediately
+      body.innerHTML = '<div class="skill-loading"><div class="spinner"></div>Generating with Claude...</div>';
+      panel.classList.add('open');
+      executeSkill(skill, skill.prompt, '');
+    } else {
+      // Needs input — show empty state
+      body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter a ${skill.inputLabel || 'prompt'} above and click Generate.</p>`;
+      panel.classList.add('open');
+      input.focus();
     }
   }
 
-  function viewHistoryItem(skill, index) {
-    const item = skillHistory[skill][index];
-    const content = document.getElementById('preview-content');
-    const historyEl = document.getElementById('preview-history');
-    const title = document.getElementById('preview-title');
-    const status = document.getElementById('preview-status');
+  function runSkill() {
+    const skill = skillsData.find(s => s.id === activeSkillId);
+    if (!skill) return;
+    const input = document.getElementById('skill-input').value.trim();
+    if (!input && !skill.prompt) return;
 
-    title.textContent = `${skill.toUpperCase()} \u2014 ${item.name}`;
-    status.textContent = item.badgeLabel.toUpperCase();
-    content.style.display = '';
-    historyEl.style.display = 'none';
-    const openBtn = item.url
-      ? `<div class="line"><a href="${item.url}" target="_blank" style="color:var(--accent);text-decoration:none;font-family:var(--font-mono);font-size:12px;">Open file &rarr;</a></div><div class="line">&nbsp;</div>`
-      : '';
-    content.innerHTML = item.preview + '<div class="line">&nbsp;</div>' + openBtn + '<div class="line"><span class="muted" style="cursor:pointer" onclick="showPreviewTab(\'history\')">&larr; Back to history</span></div>';
+    const body = document.getElementById('skill-output-body');
+    body.innerHTML = '<div class="skill-loading"><div class="spinner"></div>Generating with Claude...</div>';
+    document.getElementById('skill-copy-btn').parentElement.style.display = 'none';
+
+    const prompt = skill.prompt
+      ? (input ? `${skill.prompt}\n\nAdditional context: ${input}` : skill.prompt)
+      : input;
+
+    executeSkill(skill, prompt, '');
+  }
+
+  function rerunSkill() {
+    const skill = skillsData.find(s => s.id === activeSkillId);
+    if (!skill || skill.historySkill) return;
+    runSkill();
+  }
+
+  async function executeSkill(skill, prompt, context) {
+    const body = document.getElementById('skill-output-body');
+    const btn = document.getElementById('skill-run-btn');
+    const actionsEl = document.getElementById('skill-copy-btn').parentElement;
+
+    if (typeof CONFIG === 'undefined' || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
+      body.innerHTML = '<div class="action-error">API key not configured. Add your key to <code>config.js</code>.</div>';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': CONFIG.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: CONFIG.MODEL,
+          max_tokens: 2048,
+          system: skill.system,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error?.message || `API error ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      lastSkillOutput = data.content[0].text;
+      body.innerHTML = renderMarkdown(lastSkillOutput);
+      actionsEl.style.display = 'flex';
+    } catch (e) {
+      body.innerHTML = `<div class="action-error">Error: ${escapeHtml(e.message)}</div>`;
+      lastSkillOutput = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Generate';
+    }
+  }
+
+  function copySkillOutput() {
+    if (!lastSkillOutput) return;
+    navigator.clipboard.writeText(lastSkillOutput).then(() => {
+      const btn = document.getElementById('skill-copy-btn');
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
   }
 
   // ── Workbench Actions ──
   function setAction(el, action) {
     document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
-    // Reset skill state and hide tabs
-    activeSkill = null;
-    document.getElementById('preview-tabs').style.display = 'none';
-    document.getElementById('preview-history').style.display = 'none';
     document.getElementById('preview-content').style.display = '';
     document.getElementById('preview-status').textContent = 'READY';
-    document.querySelectorAll('.skill-card').forEach(c => c.style.borderColor = '');
     const title = document.getElementById('preview-title');
     const preview = document.getElementById('preview-content');
     const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
