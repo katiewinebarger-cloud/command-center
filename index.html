@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center</title>
+<style>
+  :root {
+    --bg-primary: #0a0e14;
+    --bg-panel: #111820;
+    --bg-panel-hover: #1a2230;
+    --bg-input: #0d1117;
+    --border: #1e2a3a;
+    --border-active: #00bcd4;
+    --accent: #00bcd4;
+    --accent-dim: #007a8a;
+    --accent-glow: rgba(0, 188, 212, 0.15);
+    --text-primary: #c8d1dc;
+    --text-secondary: #6b7a8d;
+    --text-bright: #e8edf3;
+    --green: #2ecc71;
+    --amber: #f0a500;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --radius: 8px;
+    --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .dashboard {
+    display: grid;
+    gap: 16px;
+    padding: 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* ── Header Bar ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-left h1 {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+  }
+
+  .header-left h1 .prompt { color: var(--accent); }
+
+  .header-left .subtitle {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .header-meta .weather {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .clock {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--text-bright);
+    letter-spacing: 1px;
+  }
+
+  /* ── Summary Cards Row ── */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .summary-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .summary-card:hover {
+    border-color: var(--accent-dim);
+    background: var(--bg-panel-hover);
+  }
+
+  .summary-card.active {
+    border-color: var(--border-active);
+    box-shadow: 0 0 16px var(--accent-glow);
+  }
+
+  .summary-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .summary-card .card-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .summary-card .card-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: var(--bg-input);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .summary-card .card-expand {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    position: absolute;
+    bottom: 10px;
+    right: 16px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .summary-card:hover .card-expand { opacity: 1; }
+
+  /* Summary card inner items */
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+
+  .summary-item + .summary-item {
+    border-top: 1px solid rgba(30, 42, 58, 0.5);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+
+  .summary-item .time-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    min-width: 46px;
+  }
+
+  .summary-item .priority-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .summary-item .item-text {
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Slack summary items */
+  .slack-summary-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+
+  .slack-summary-item + .slack-summary-item {
+    border-top: 1px solid rgba(30, 42, 58, 0.5);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+
+  .slack-summary-item .mini-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--bg-primary);
+    flex-shrink: 0;
+  }
+
+  .slack-summary-item .slack-text {
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .slack-summary-item .slack-channel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  /* Energy summary items */
+  .energy-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+
+  .energy-summary-item + .energy-summary-item {
+    border-top: 1px solid rgba(30, 42, 58, 0.5);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+
+  .energy-summary-item .ticker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+
+  .energy-summary-item .price-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .energy-summary-item .price {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-bright);
+  }
+
+  .energy-summary-item .change {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .flat { color: var(--text-secondary); }
+
+  /* ── Detail Panel (expanded view) ── */
+  .detail-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-active);
+    border-radius: var(--radius);
+    padding: 0;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.35s ease;
+  }
+
+  .detail-panel.open {
+    max-height: 600px;
+    opacity: 1;
+    padding: 20px 24px;
+  }
+
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .detail-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .detail-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    margin-left: 8px;
+  }
+
+  .detail-close {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .detail-close:hover {
+    color: var(--text-bright);
+    border-color: var(--accent-dim);
+  }
+
+  /* Detail: Today full list */
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-input);
+    border-radius: 6px;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    transition: background 0.15s;
+  }
+
+  .task-item:hover { background: var(--bg-panel-hover); }
+  .task-item.priority-high { border-left-color: var(--red); }
+  .task-item.priority-med { border-left-color: var(--amber); }
+  .task-item.priority-low { border-left-color: var(--green); }
+
+  .task-time {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    min-width: 48px;
+  }
+
+  .task-label { color: var(--text-primary); }
+
+  /* Detail: Slack full list */
+  .message-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .message {
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-input);
+    border-radius: 6px;
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+
+  .message:hover { background: var(--bg-panel-hover); }
+
+  .message-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    color: var(--bg-primary);
+  }
+
+  .message-body { flex: 1; min-width: 0; }
+
+  .message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+
+  .message-sender { font-weight: 600; font-size: 12px; color: var(--text-bright); }
+
+  .message-channel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+
+  .message-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  /* Detail: Energy full list */
+  .market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+  .market-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: var(--bg-input);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+
+  .market-card:hover { background: var(--bg-panel-hover); }
+
+  .market-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+
+  .market-sublabel {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 1px;
+  }
+
+  .market-value {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  .market-change {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-align: right;
+  }
+
+  /* ── Panels ── */
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Skills Launcher ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 10px;
+  }
+
+  .skill-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .skill-card:hover {
+    background: var(--bg-panel-hover);
+    border-color: var(--accent-dim);
+    box-shadow: 0 0 20px var(--accent-glow);
+    transform: translateY(-2px);
+  }
+
+  .skill-card .skill-icon {
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(0, 188, 212, 0.08);
+  }
+
+  .skill-card .skill-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.3px;
+  }
+
+  .skill-card .skill-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.3;
+  }
+
+  /* ── Content Workbench ── */
+  .workbench-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    flex: 1;
+  }
+
+  .workbench-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+  }
+
+  .action-btn:hover {
+    background: var(--bg-panel-hover);
+    border-color: var(--accent-dim);
+    color: var(--text-bright);
+  }
+
+  .action-btn.active {
+    background: rgba(0, 188, 212, 0.08);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .action-btn .btn-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .preview-pane {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .preview-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .preview-status {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    padding: 3px 8px;
+    background: rgba(0, 188, 212, 0.08);
+    border-radius: 4px;
+  }
+
+  .preview-content {
+    flex: 1;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .preview-content .line { padding: 2px 0; }
+  .preview-content .highlight { color: var(--accent); }
+  .preview-content .muted { color: var(--text-secondary); opacity: 0.5; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .summary-row { grid-template-columns: 1fr; }
+    .market-grid { grid-template-columns: 1fr; }
+    .workbench-layout { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .dashboard { padding: 12px; gap: 12px; }
+    .clock { font-size: 20px; }
+    .skills-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+  /* ── Animations ── */
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- ── Header Bar ── -->
+  <header class="header">
+    <div class="header-left">
+      <h1><span class="prompt">&gt;</span> Command Center</h1>
+      <div class="subtitle" id="greeting-text">Good morning, Katie.</div>
+    </div>
+    <div class="header-right">
+      <div class="header-meta">
+        <div id="date-display"></div>
+        <div class="weather">72&deg;F &middot; Partly Cloudy &middot; Austin, TX</div>
+      </div>
+      <div class="clock" id="clock-display"></div>
+    </div>
+  </header>
+
+  <!-- ── Summary Cards ── -->
+  <div class="summary-row">
+
+    <!-- Today Card -->
+    <div class="summary-card" id="card-today" onclick="toggleDetail('today')">
+      <div class="card-header">
+        <div class="card-title"><span class="live-dot"></span> Today</div>
+        <div class="card-badge">6 events</div>
+      </div>
+      <div class="summary-item">
+        <span class="priority-dot" style="background:var(--red)"></span>
+        <span class="time-badge">9:00a</span>
+        <span class="item-text">Strategy sync w/ leadership</span>
+      </div>
+      <div class="summary-item">
+        <span class="priority-dot" style="background:var(--amber)"></span>
+        <span class="time-badge">10:30a</span>
+        <span class="item-text">Review Q2 market position deck</span>
+      </div>
+      <span class="card-expand">click to expand</span>
+    </div>
+
+    <!-- Slack Pulse Card -->
+    <div class="summary-card" id="card-slack" onclick="toggleDetail('slack')">
+      <div class="card-header">
+        <div class="card-title"><span class="live-dot"></span> Slack Pulse</div>
+        <div class="card-badge">4 unread</div>
+      </div>
+      <div class="slack-summary-item">
+        <div class="mini-avatar" style="background:#2ecc71">MR</div>
+        <span class="slack-text">Updated competitive landscape section</span>
+        <span class="slack-channel">#strategy</span>
+      </div>
+      <div class="slack-summary-item">
+        <div class="mini-avatar" style="background:#9b59b6">SL</div>
+        <span class="slack-text">ERCOT day-ahead cleared higher than expected</span>
+        <span class="slack-channel">#market-ops</span>
+      </div>
+      <span class="card-expand">click to expand</span>
+    </div>
+
+    <!-- Energy Intel Card -->
+    <div class="summary-card" id="card-energy" onclick="toggleDetail('energy')">
+      <div class="card-header">
+        <div class="card-title">&#9889; Energy Intel</div>
+        <div class="card-badge">live</div>
+      </div>
+      <div class="energy-summary-item">
+        <span class="ticker">Brent Crude</span>
+        <div class="price-group">
+          <span class="price">$82.47</span>
+          <span class="change up">+1.3%</span>
+        </div>
+      </div>
+      <div class="energy-summary-item">
+        <span class="ticker">LNG (JKM)</span>
+        <div class="price-group">
+          <span class="price">$12.85</span>
+          <span class="change down">-2.1%</span>
+        </div>
+      </div>
+      <span class="card-expand">click to expand</span>
+    </div>
+  </div>
+
+  <!-- ── Detail Panel (Today) ── -->
+  <div class="detail-panel" id="detail-today">
+    <div class="detail-header">
+      <div class="detail-title">Today &mdash; Full Schedule</div>
+      <button class="detail-close" onclick="toggleDetail('today')">&#10005; close</button>
+    </div>
+    <ul class="task-list">
+      <li class="task-item priority-high">
+        <span class="task-time">9:00a</span>
+        <span class="task-label">Strategy sync w/ leadership</span>
+      </li>
+      <li class="task-item priority-med">
+        <span class="task-time">10:30a</span>
+        <span class="task-label">Review Q2 market position deck</span>
+      </li>
+      <li class="task-item priority-low">
+        <span class="task-time">12:00p</span>
+        <span class="task-label">Lunch &amp; learn: grid modernization</span>
+      </li>
+      <li class="task-item priority-med">
+        <span class="task-time">2:00p</span>
+        <span class="task-label">Product roadmap standup</span>
+      </li>
+      <li class="task-item priority-high">
+        <span class="task-time">4:00p</span>
+        <span class="task-label">Finalize investor update draft</span>
+      </li>
+      <li class="task-item priority-low">
+        <span class="task-time">5:30p</span>
+        <span class="task-label">Wrap-up: review open PRs</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ── Detail Panel (Slack) ── -->
+  <div class="detail-panel" id="detail-slack">
+    <div class="detail-header">
+      <div class="detail-title">Slack Pulse &mdash; All Messages</div>
+      <button class="detail-close" onclick="toggleDetail('slack')">&#10005; close</button>
+    </div>
+    <div class="message-list">
+      <div class="message">
+        <div class="message-avatar" style="background:#2ecc71">MR</div>
+        <div class="message-body">
+          <div class="message-header">
+            <span class="message-sender">Maya R.</span>
+            <span class="message-channel">#strategy</span>
+          </div>
+          <div class="message-text">Updated the competitive landscape section &mdash; ready for your eyes</div>
+        </div>
+      </div>
+      <div class="message">
+        <div class="message-avatar" style="background:#f0a500">JK</div>
+        <div class="message-body">
+          <div class="message-header">
+            <span class="message-sender">James K.</span>
+            <span class="message-channel">#eng-platform</span>
+          </div>
+          <div class="message-text">Deployment pipeline green across all envs. v2.4.1 is live.</div>
+        </div>
+      </div>
+      <div class="message">
+        <div class="message-avatar" style="background:#9b59b6">SL</div>
+        <div class="message-body">
+          <div class="message-header">
+            <span class="message-sender">Sara L.</span>
+            <span class="message-channel">#market-ops</span>
+          </div>
+          <div class="message-text">ERCOT day-ahead cleared higher than expected. Notes in thread.</div>
+        </div>
+      </div>
+      <div class="message">
+        <div class="message-avatar" style="background:#00bcd4">TP</div>
+        <div class="message-body">
+          <div class="message-header">
+            <span class="message-sender">Tom P.</span>
+            <span class="message-channel">#general</span>
+          </div>
+          <div class="message-text">Reminder: team offsite logistics doc shared in #events</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Detail Panel (Energy) ── -->
+  <div class="detail-panel" id="detail-energy">
+    <div class="detail-header">
+      <div class="detail-title">Energy Intel &mdash; Full Market View</div>
+      <button class="detail-close" onclick="toggleDetail('energy')">&#10005; close</button>
+    </div>
+    <div class="market-grid">
+      <div class="market-card">
+        <div>
+          <div class="market-label">Brent Crude</div>
+          <div class="market-sublabel">ICE Futures</div>
+        </div>
+        <div>
+          <div class="market-value">$82.47</div>
+          <div class="market-change up">+1.3%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">WTI Crude</div>
+          <div class="market-sublabel">NYMEX</div>
+        </div>
+        <div>
+          <div class="market-value">$78.15</div>
+          <div class="market-change up">+0.8%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">LNG (JKM)</div>
+          <div class="market-sublabel">Asia Spot</div>
+        </div>
+        <div>
+          <div class="market-value">$12.85</div>
+          <div class="market-change down">-2.1%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">Henry Hub NG</div>
+          <div class="market-sublabel">NYMEX</div>
+        </div>
+        <div>
+          <div class="market-value">$2.34</div>
+          <div class="market-change down">-0.9%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">ERCOT RT</div>
+          <div class="market-sublabel">Real-Time LMP</div>
+        </div>
+        <div>
+          <div class="market-value">$42.18</div>
+          <div class="market-change up">+3.2%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">ERCOT DA</div>
+          <div class="market-sublabel">Day-Ahead LMP</div>
+        </div>
+        <div>
+          <div class="market-value">$38.75</div>
+          <div class="market-change up">+1.8%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">Solar Index</div>
+          <div class="market-sublabel">Generation Factor</div>
+        </div>
+        <div>
+          <div class="market-value">87.2</div>
+          <div class="market-change up">+5.1%</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div>
+          <div class="market-label">Grid Load</div>
+          <div class="market-sublabel">ERCOT System</div>
+        </div>
+        <div>
+          <div class="market-value">52.1 GW</div>
+          <div class="market-change down">-2.3%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Cowork Skills ── -->
+  <div class="panel">
+    <div class="panel-title">Cowork Skills</div>
+    <div class="skills-grid">
+      <div class="skill-card" onclick="activateSkill(this, 'Slides')">
+        <div class="skill-icon">&#9654;</div>
+        <div class="skill-name">Slides</div>
+        <div class="skill-desc">Create EQ presentations</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'Docs')">
+        <div class="skill-icon">&#9998;</div>
+        <div class="skill-name">Docs</div>
+        <div class="skill-desc">Draft Word documents</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'Spreadsheets')">
+        <div class="skill-icon">&#9638;</div>
+        <div class="skill-name">Spreadsheets</div>
+        <div class="skill-desc">Build &amp; analyze .xlsx</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'PDF')">
+        <div class="skill-icon">&#9744;</div>
+        <div class="skill-name">PDF</div>
+        <div class="skill-desc">Merge, split, extract</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'Meeting Notes')">
+        <div class="skill-icon">&#9992;</div>
+        <div class="skill-name">Meetings</div>
+        <div class="skill-desc">Takeaways &amp; actions</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'Company Intel')">
+        <div class="skill-icon">&#9733;</div>
+        <div class="skill-name">EQ Context</div>
+        <div class="skill-desc">Strategy &amp; company info</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'API Builder')">
+        <div class="skill-icon">&#10094;&#10095;</div>
+        <div class="skill-name">Claude API</div>
+        <div class="skill-desc">Build with Anthropic SDK</div>
+      </div>
+      <div class="skill-card" onclick="activateSkill(this, 'Scheduler')">
+        <div class="skill-icon">&#8986;</div>
+        <div class="skill-name">Schedule</div>
+        <div class="skill-desc">Recurring tasks</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Content Workbench ── -->
+  <div class="panel">
+    <div class="panel-title">Content Workbench</div>
+    <div class="workbench-layout">
+      <div class="workbench-actions">
+        <button class="action-btn active" onclick="setAction(this, 'draft')">
+          <span class="btn-icon">&#9998;</span> Draft memo
+        </button>
+        <button class="action-btn" onclick="setAction(this, 'summarize')">
+          <span class="btn-icon">&#8801;</span> Summarize doc
+        </button>
+        <button class="action-btn" onclick="setAction(this, 'analyze')">
+          <span class="btn-icon">&#9880;</span> Analyze data
+        </button>
+        <button class="action-btn" onclick="setAction(this, 'review')">
+          <span class="btn-icon">&#10003;</span> Review &amp; edit
+        </button>
+        <button class="action-btn" onclick="setAction(this, 'brainstorm')">
+          <span class="btn-icon">&#9733;</span> Brainstorm
+        </button>
+      </div>
+      <div class="preview-pane">
+        <div class="preview-header">
+          <span class="preview-title" id="preview-title">OUTPUT PREVIEW &mdash; DRAFT MEMO</span>
+          <span class="preview-status">READY</span>
+        </div>
+        <div class="preview-content" id="preview-content">
+          <div class="line"><span class="highlight">To:</span> Leadership Team</div>
+          <div class="line"><span class="highlight">Re:</span> Q2 Market Position &amp; Strategic Outlook</div>
+          <div class="line"><span class="highlight">Date:</span> <span id="preview-date"></span></div>
+          <div class="line">&nbsp;</div>
+          <div class="line">Team,</div>
+          <div class="line">&nbsp;</div>
+          <div class="line">Following last week's strategy sync, here is a summary of our current position in the ERCOT market and recommended next steps for Q2.</div>
+          <div class="line">&nbsp;</div>
+          <div class="line"><span class="highlight">Key highlights:</span></div>
+          <div class="line">&bull; Day-ahead prices trending 8% above seasonal average</div>
+          <div class="line">&bull; Solar generation capacity on track for 12% YoY increase</div>
+          <div class="line">&bull; Battery storage portfolio performing within 2% of forecast</div>
+          <div class="line">&nbsp;</div>
+          <div class="line"><span class="muted">[ Click an action to change preview context ]</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Clock & Date ──
+  function updateClock() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    document.getElementById('clock-display').textContent = `${h12}:${m}:${s} ${ampm}`;
+  }
+
+  function updateDate() {
+    const now = new Date();
+    document.getElementById('date-display').textContent =
+      now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('preview-date').textContent =
+      now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function updateGreeting() {
+    const h = new Date().getHours();
+    let g = 'Good evening';
+    if (h < 12) g = 'Good morning';
+    else if (h < 17) g = 'Good afternoon';
+    document.getElementById('greeting-text').textContent = `${g}, Katie.`;
+  }
+
+  updateClock();
+  updateDate();
+  updateGreeting();
+  setInterval(updateClock, 1000);
+  setInterval(() => { updateDate(); updateGreeting(); }, 60000);
+
+  // ── Detail Panel Toggle ──
+  let activeDetail = null;
+
+  function toggleDetail(name) {
+    const panel = document.getElementById(`detail-${name}`);
+    const card = document.getElementById(`card-${name}`);
+    const panels = ['today', 'slack', 'energy'];
+
+    if (activeDetail === name) {
+      // Close current
+      panel.classList.remove('open');
+      card.classList.remove('active');
+      activeDetail = null;
+      return;
+    }
+
+    // Close any open panel
+    panels.forEach(p => {
+      document.getElementById(`detail-${p}`).classList.remove('open');
+      document.getElementById(`card-${p}`).classList.remove('active');
+    });
+
+    // Open this one
+    panel.classList.add('open');
+    card.classList.add('active');
+    activeDetail = name;
+
+    // Smooth scroll to panel
+    setTimeout(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+  }
+
+  // ── Skills ──
+  function activateSkill(el, name) {
+    document.querySelectorAll('.skill-card').forEach(c => c.style.borderColor = '');
+    el.style.borderColor = 'var(--accent)';
+    const preview = document.getElementById('preview-content');
+    const title = document.getElementById('preview-title');
+    title.textContent = `OUTPUT PREVIEW \u2014 ${name.toUpperCase()}`;
+    const messages = {
+      'Slides': '<div class="line"><span class="highlight">Deck initialized:</span> EQ Q2 Strategy Update</div><div class="line">Template: Equilibrium Energy branded</div><div class="line">Slides: Title, Agenda, Market Overview, Financials, Next Steps</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready to generate slide content...</span></div>',
+      'Docs': '<div class="line"><span class="highlight">Document ready</span></div><div class="line">Format: .docx with EQ formatting</div><div class="line">Sections: Header, Executive Summary, Body, Appendix</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Awaiting content input...</span></div>',
+      'Spreadsheets': '<div class="line"><span class="highlight">Workbook:</span> market_analysis_q2.xlsx</div><div class="line">Sheets: Raw Data | Pivot | Charts | Summary</div><div class="line">Formulas: VLOOKUP, conditional formatting, sparklines</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready for data import...</span></div>',
+      'PDF': '<div class="line"><span class="highlight">PDF Tools</span></div><div class="line">&bull; Merge multiple PDFs into one</div><div class="line">&bull; Split by page range</div><div class="line">&bull; Extract text and tables</div><div class="line">&bull; Add watermarks</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Drop a file to begin...</span></div>',
+      'Meeting Notes': '<div class="line"><span class="highlight">Meeting Takeaways Engine</span></div><div class="line">Input: raw notes or transcript</div><div class="line">Output: action items, owners, deadlines</div><div class="line">Format: Slack-ready message</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Paste meeting notes to process...</span></div>',
+      'Company Intel': '<div class="line"><span class="highlight">EQ Knowledge Base</span></div><div class="line">&bull; Company strategy &amp; positioning</div><div class="line">&bull; Product direction &amp; roadmap</div><div class="line">&bull; Brand voice guidelines</div><div class="line">&bull; Team &amp; org context</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ask anything about EQ...</span></div>',
+      'API Builder': '<div class="line"><span class="highlight">Claude API Workspace</span></div><div class="line">SDK: @anthropic-ai/sdk (latest)</div><div class="line">Model: claude-opus-4-6</div><div class="line">Tools: function calling, streaming, batches</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Describe what you want to build...</span></div>',
+      'Scheduler': '<div class="line"><span class="highlight">Task Scheduler</span></div><div class="line">Active tasks: 3</div><div class="line">&bull; Daily market report &mdash; 7:00 AM</div><div class="line">&bull; Slack digest &mdash; every 4 hours</div><div class="line">&bull; PR review reminder &mdash; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Create a new scheduled task...</span></div>',
+    };
+    preview.innerHTML = messages[name] || '<div class="line"><span class="muted">Select a skill to preview...</span></div>';
+  }
+
+  // ── Workbench Actions ──
+  function setAction(el, action) {
+    document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    const title = document.getElementById('preview-title');
+    const preview = document.getElementById('preview-content');
+    const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const content = {
+      draft: `<div class="line"><span class="highlight">To:</span> Leadership Team</div><div class="line"><span class="highlight">Re:</span> Q2 Market Position &amp; Strategic Outlook</div><div class="line"><span class="highlight">Date:</span> ${date}</div><div class="line">&nbsp;</div><div class="line">Team,</div><div class="line">&nbsp;</div><div class="line">Following last week's strategy sync, here is a summary of our current position in the ERCOT market and recommended next steps for Q2.</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key highlights:</span></div><div class="line">&bull; Day-ahead prices trending 8% above seasonal average</div><div class="line">&bull; Solar generation capacity on track for 12% YoY increase</div><div class="line">&bull; Battery storage portfolio performing within 2% of forecast</div>`,
+      summarize: '<div class="line"><span class="highlight">Document Summary</span></div><div class="line">&nbsp;</div><div class="line">Upload or paste a document to generate a concise summary.</div><div class="line">&nbsp;</div><div class="line">Supported: .pdf, .docx, .txt, .md</div><div class="line">Output: executive summary with key points</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Waiting for input...</span></div>',
+      analyze: '<div class="line"><span class="highlight">Data Analysis</span></div><div class="line">&nbsp;</div><div class="line">Provide a dataset or spreadsheet to analyze.</div><div class="line">&nbsp;</div><div class="line">Capabilities:</div><div class="line">&bull; Statistical summaries &amp; distributions</div><div class="line">&bull; Trend identification</div><div class="line">&bull; Anomaly detection</div><div class="line">&bull; Chart recommendations</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Waiting for data...</span></div>',
+      review: '<div class="line"><span class="highlight">Review &amp; Edit</span></div><div class="line">&nbsp;</div><div class="line">Paste or upload content for review.</div><div class="line">&nbsp;</div><div class="line">Checks: clarity, tone, accuracy, formatting</div><div class="line">Style: professional, concise, EQ brand voice</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Waiting for content...</span></div>',
+      brainstorm: '<div class="line"><span class="highlight">Brainstorm Mode</span></div><div class="line">&nbsp;</div><div class="line">Recent topics:</div><div class="line">&bull; Battery-as-a-service pricing models</div><div class="line">&bull; Customer acquisition for C&amp;I segment</div><div class="line">&bull; AI-driven load forecasting pitch angles</div><div class="line">&bull; Partnership strategy for distributed energy</div><div class="line">&nbsp;</div><div class="line"><span class="muted">What are we thinking about?</span></div>',
+    };
+    const labels = { draft: 'DRAFT MEMO', summarize: 'SUMMARIZE', analyze: 'ANALYZE DATA', review: 'REVIEW & EDIT', brainstorm: 'BRAINSTORM' };
+    title.textContent = `OUTPUT PREVIEW \u2014 ${labels[action]}`;
+    preview.innerHTML = content[action];
+  }
+</script>
+</body>
+</html>
