@@ -999,6 +999,217 @@
   .history-badge.final { background: rgba(0,188,212,0.1); color: var(--accent); }
   .history-badge.archived { background: rgba(107,122,141,0.1); color: var(--text-secondary); }
 
+  /* ── Actions Panel ── */
+  .actions-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .action-pill {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .action-pill:hover {
+    border-color: var(--accent-dim);
+    color: var(--text-bright);
+    background: var(--bg-panel-hover);
+  }
+
+  .action-pill.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 188, 212, 0.08);
+  }
+
+  .action-form {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .action-form.open { display: block; }
+
+  .action-form label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .action-form input,
+  .action-form textarea {
+    width: 100%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    outline: none;
+    transition: border-color 0.15s;
+    resize: vertical;
+  }
+
+  .action-form input:focus,
+  .action-form textarea:focus { border-color: var(--accent-dim); }
+
+  .action-form input::placeholder,
+  .action-form textarea::placeholder { color: var(--text-secondary); opacity: 0.4; }
+
+  .action-form textarea { min-height: 60px; }
+
+  .form-row { margin-bottom: 12px; }
+  .form-row:last-child { margin-bottom: 0; }
+
+  .action-submit {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--bg-primary);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+
+  .action-submit:hover { background: var(--accent-dim); }
+  .action-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .action-output {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    min-height: 120px;
+    display: none;
+  }
+
+  .action-output.visible { display: block; }
+
+  .action-output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .action-output-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .action-output-btns {
+    display: flex;
+    gap: 6px;
+  }
+
+  .action-output-btn {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .action-output-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+  }
+
+  .action-output-btn.copied {
+    color: var(--green);
+    border-color: var(--green);
+  }
+
+  .action-output-body {
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-primary);
+  }
+
+  .action-output-body h1, .action-output-body h2, .action-output-body h3 {
+    font-family: var(--font-mono);
+    color: var(--text-bright);
+    margin: 16px 0 8px;
+  }
+  .action-output-body h1 { font-size: 16px; }
+  .action-output-body h2 { font-size: 14px; }
+  .action-output-body h3 { font-size: 13px; color: var(--accent); }
+  .action-output-body p { margin: 8px 0; }
+  .action-output-body ul, .action-output-body ol { margin: 8px 0 8px 20px; }
+  .action-output-body li { margin: 4px 0; }
+  .action-output-body strong { color: var(--text-bright); }
+  .action-output-body code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-panel);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .action-output-body blockquote {
+    border-left: 3px solid var(--accent-dim);
+    padding-left: 12px;
+    color: var(--text-secondary);
+    margin: 8px 0;
+  }
+
+  .action-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  .action-loading .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .action-error {
+    padding: 16px;
+    color: var(--red);
+    font-size: 13px;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 1024px) {
     .summary-row { grid-template-columns: 1fr; }
@@ -1316,8 +1527,44 @@
     </div>
   </div>
 
+  <!-- ── Actions ── -->
+  <div class="panel">
+    <div class="panel-title">Actions</div>
+    <div class="actions-bar">
+      <button class="action-pill" onclick="openActionForm('slack')">Slack Message</button>
+      <button class="action-pill" onclick="openActionForm('report')">Report</button>
+      <button class="action-pill" onclick="openActionForm('memo')">Memo</button>
+      <button class="action-pill" onclick="openActionForm('email')">Email Draft</button>
+    </div>
+    <div class="action-form" id="action-form">
+      <div class="form-row">
+        <label id="action-form-label">Prompt</label>
+        <input type="text" id="action-prompt" placeholder="What do you need?">
+      </div>
+      <div class="form-row">
+        <label>Context (optional)</label>
+        <textarea id="action-context" placeholder="Paste background info, meeting notes, or data..."></textarea>
+      </div>
+      <div class="form-row" style="display:flex;gap:8px;align-items:center;">
+        <button class="action-submit" id="action-submit-btn" onclick="generateAction()">Generate</button>
+        <span style="font-size:11px;color:var(--text-secondary);font-family:var(--font-mono);" id="action-type-label"></span>
+      </div>
+    </div>
+    <div class="action-output" id="action-output">
+      <div class="action-output-header">
+        <span class="action-output-title" id="action-output-title">Output</span>
+        <div class="action-output-btns">
+          <button class="action-output-btn" id="copy-btn" onclick="copyOutput()">copy</button>
+          <button class="action-output-btn" onclick="regenerateAction()">regenerate</button>
+        </div>
+      </div>
+      <div class="action-output-body" id="action-output-body"></div>
+    </div>
+  </div>
+
 </div>
 
+<script src="config.js"></script>
 <script>
   // ── Clock & Date ──
   function updateClock() {
@@ -1747,6 +1994,165 @@
     const labels = { draft: 'DRAFT MEMO', summarize: 'SUMMARIZE', analyze: 'ANALYZE DATA', review: 'REVIEW & EDIT', brainstorm: 'BRAINSTORM' };
     title.textContent = `OUTPUT PREVIEW \u2014 ${labels[action]}`;
     preview.innerHTML = content[action];
+  }
+
+  // ── Actions (API-powered generation) ──
+  let currentActionType = null;
+  let lastActionPrompt = '';
+  let lastActionContext = '';
+  let lastRawOutput = '';
+
+  const ACTION_CONFIG = {
+    slack: {
+      label: 'Slack Message',
+      placeholder: 'What should the message say? e.g. "Update team on Q2 pipeline progress"',
+      system: 'You are a professional Slack message writer for an energy technology company. Write concise, clear Slack messages. Use appropriate tone — professional but not stiff. Use bullet points for lists. Keep it under 200 words unless asked otherwise. Do not use markdown headers. Use *bold* for emphasis (Slack format).',
+    },
+    report: {
+      label: 'Report',
+      placeholder: 'What should the report cover? e.g. "Weekly market summary for ERCOT pricing"',
+      system: 'You are a report writer for an energy technology company (Equilibrium Energy). Write structured, professional reports with clear sections, data-driven insights, and actionable recommendations. Use markdown formatting with headers, bullet points, and bold for key metrics.',
+    },
+    memo: {
+      label: 'Memo',
+      placeholder: 'What is the memo about? e.g. "Proposal to expand battery storage portfolio"',
+      system: 'You are a memo writer for an energy technology company (Equilibrium Energy). Write clear, concise internal memos with To/From/Date/Re headers, an executive summary, key points, and next steps. Professional tone, action-oriented.',
+    },
+    email: {
+      label: 'Email Draft',
+      placeholder: 'Who is it to and what about? e.g. "Follow up with bp on pricing workshop outcomes"',
+      system: 'You are an email writer for a senior leader at an energy technology company (Equilibrium Energy). Write professional, warm emails. Include a clear subject line suggestion at the top. Keep emails focused and action-oriented.',
+    },
+  };
+
+  function openActionForm(type) {
+    currentActionType = type;
+    const config = ACTION_CONFIG[type];
+    const form = document.getElementById('action-form');
+    const pills = document.querySelectorAll('.action-pill');
+
+    pills.forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.getElementById('action-form-label').textContent = config.label + ' Prompt';
+    document.getElementById('action-prompt').placeholder = config.placeholder;
+    document.getElementById('action-type-label').textContent = config.label;
+    document.getElementById('action-prompt').value = '';
+    document.getElementById('action-context').value = '';
+    form.classList.add('open');
+    document.getElementById('action-prompt').focus();
+
+    // Hide previous output
+    document.getElementById('action-output').classList.remove('visible');
+  }
+
+  async function generateAction() {
+    if (!currentActionType) return;
+
+    const prompt = document.getElementById('action-prompt').value.trim();
+    if (!prompt) return;
+
+    lastActionPrompt = prompt;
+    lastActionContext = document.getElementById('action-context').value.trim();
+
+    const config = ACTION_CONFIG[currentActionType];
+    const btn = document.getElementById('action-submit-btn');
+    const output = document.getElementById('action-output');
+    const body = document.getElementById('action-output-body');
+    const title = document.getElementById('action-output-title');
+
+    // Check API key
+    if (typeof CONFIG === 'undefined' || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
+      output.classList.add('visible');
+      title.textContent = config.label;
+      body.innerHTML = '<div class="action-error">API key not configured. Add your key to <code>config.js</code>.</div>';
+      return;
+    }
+
+    // Loading state
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    output.classList.add('visible');
+    title.textContent = config.label;
+    body.innerHTML = '<div class="action-loading"><div class="spinner"></div>Generating with Claude...</div>';
+
+    const userMessage = lastActionContext
+      ? `${prompt}\n\nContext:\n${lastActionContext}`
+      : prompt;
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': CONFIG.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: CONFIG.MODEL,
+          max_tokens: 1024,
+          system: config.system,
+          messages: [{ role: 'user', content: userMessage }],
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error?.message || `API error ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      lastRawOutput = data.content[0].text;
+      body.innerHTML = renderMarkdown(lastRawOutput);
+    } catch (e) {
+      body.innerHTML = `<div class="action-error">Error: ${escapeHtml(e.message)}</div>`;
+      lastRawOutput = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Generate';
+    }
+  }
+
+  function regenerateAction() {
+    if (!currentActionType || !lastActionPrompt) return;
+    generateAction();
+  }
+
+  function copyOutput() {
+    if (!lastRawOutput) return;
+    navigator.clipboard.writeText(lastRawOutput).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // Simple markdown to HTML renderer
+  function renderMarkdown(text) {
+    let html = escapeHtml(text);
+    // Headers
+    html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+    // Bold and italic
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    // Inline code
+    html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+    // Blockquotes
+    html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+    // Unordered lists
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+    // Ordered lists
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    // Paragraphs (double newlines)
+    html = html.replace(/\n\n/g, '</p><p>');
+    // Single newlines inside paragraphs
+    html = html.replace(/\n/g, '<br>');
+    return '<p>' + html + '</p>';
   }
 </script>
 </body>
