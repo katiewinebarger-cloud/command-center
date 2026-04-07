@@ -1257,34 +1257,36 @@
     'Scheduler': '<div class="line"><span class="highlight">Task Scheduler</span></div><div class="line">Active tasks: 3</div><div class="line">&bull; Daily market report &mdash; 7:00 AM</div><div class="line">&bull; Slack digest &mdash; every 4 hours</div><div class="line">&bull; PR review reminder &mdash; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Create a new scheduled task...</span></div>',
   };
 
-  const skillHistory = {
-    'Meeting Notes': [
-      { name: 'Strategy Sync — Leadership Team', date: 'Apr 4, 2026', meta: '6 action items', badge: 'sent', badgeLabel: 'Sent', preview: '<div class="line"><span class="highlight">Meeting:</span> Strategy Sync w/ Leadership</div><div class="line"><span class="highlight">Date:</span> Apr 4, 2026 &middot; 9:00 AM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; Q2 revenue tracking 12% ahead of plan</div><div class="line">&bull; Battery storage margins improving — expand Houston portfolio</div><div class="line">&bull; Board deck due Apr 18 — Katie owns final draft</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Action Items:</span></div><div class="line">&bull; <strong>Katie</strong> — Finalize board deck by Apr 15</div><div class="line">&bull; <strong>Maya</strong> — Update competitive landscape slide</div><div class="line">&bull; <strong>James</strong> — Ship v2.5 staging by Apr 10</div>' },
-      { name: 'Product Roadmap Standup', date: 'Apr 3, 2026', meta: '4 action items', badge: 'sent', badgeLabel: 'Sent', preview: '<div class="line"><span class="highlight">Meeting:</span> Product Roadmap Standup</div><div class="line"><span class="highlight">Date:</span> Apr 3, 2026 &middot; 2:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; Load forecasting ML model hitting 94% accuracy</div><div class="line">&bull; Mobile app MVP pushed to May — resource constraint</div><div class="line">&bull; Customer portal v2 in QA, launch next sprint</div>' },
-      { name: 'Grid Modernization Lunch & Learn', date: 'Apr 1, 2026', meta: '2 action items', badge: 'archived', badgeLabel: 'Archived', preview: '<div class="line"><span class="highlight">Meeting:</span> Grid Modernization Lunch &amp; Learn</div><div class="line"><span class="highlight">Date:</span> Apr 1, 2026 &middot; 12:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; FERC Order 2222 opening DER aggregation opportunities</div><div class="line">&bull; Texas grid resilience investments creating tailwinds</div><div class="line">&bull; Potential partnership angle with municipal utilities</div>' },
-      { name: 'Investor Update Working Session', date: 'Mar 28, 2026', meta: '5 action items', badge: 'sent', badgeLabel: 'Sent', preview: '<div class="line"><span class="highlight">Meeting:</span> Investor Update Working Session</div><div class="line"><span class="highlight">Date:</span> Mar 28, 2026 &middot; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; Series B narrative: profitability path + market expansion</div><div class="line">&bull; Highlight 3x growth in managed capacity YoY</div><div class="line">&bull; Include customer case study — industrial C&amp;I segment</div>' },
-    ],
-    'Executive Coaching': [
-      { name: 'Leadership Self-Assessment — Q1 Review', date: 'Apr 2, 2026', meta: 'Reflection + goals', badge: 'final', badgeLabel: 'Complete', preview: '<div class="line"><span class="highlight">Q1 Leadership Self-Assessment</span></div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Strengths identified:</span></div><div class="line">&bull; Strategic vision — team alignment improved 30%</div><div class="line">&bull; Cross-functional communication rated highly by peers</div><div class="line">&bull; Decision speed in market operations</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Growth areas:</span></div><div class="line">&bull; Delegation — tendency to stay too close to execution</div><div class="line">&bull; Saying no to low-impact meetings</div><div class="line">&bull; Building more structured 1:1 agendas</div>' },
-      { name: 'Coaching Prep — Difficult Conversation', date: 'Mar 25, 2026', meta: 'Framework + talking points', badge: 'final', badgeLabel: 'Complete', preview: '<div class="line"><span class="highlight">Coaching Prep: Difficult Conversation</span></div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Situation:</span> Performance feedback for direct report</div><div class="line"><span class="highlight">Framework:</span> SBI (Situation-Behavior-Impact)</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Talking points:</span></div><div class="line">&bull; Acknowledge strengths and recent wins first</div><div class="line">&bull; Specific examples of missed deadlines (3 in March)</div><div class="line">&bull; Collaborative goal-setting for Q2</div><div class="line">&bull; Follow-up cadence: weekly check-ins for 30 days</div>' },
-      { name: '360 Feedback Synthesis', date: 'Mar 18, 2026', meta: '8 respondents', badge: 'final', badgeLabel: 'Complete', preview: '<div class="line"><span class="highlight">360 Feedback Synthesis</span></div><div class="line"><span class="highlight">Respondents:</span> 8 (3 peers, 3 reports, 2 leadership)</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Top themes:</span></div><div class="line">&bull; "Katie brings clarity to ambiguous situations"</div><div class="line">&bull; "Strong energy market instincts"</div><div class="line">&bull; "Could delegate more to build team capacity"</div><div class="line">&bull; "Meetings she leads are efficient and well-structured"</div>' },
-    ],
-    'Slides': [
-      { name: 'Q1 Board Update Deck', date: 'Mar 30, 2026', meta: '18 slides', badge: 'final', badgeLabel: 'Final', preview: '<div class="line"><span class="highlight">Q1 Board Update Deck</span></div><div class="line">18 slides &middot; EQ branded template</div><div class="line">&nbsp;</div><div class="line">Sections: Market Overview, Financial Performance, Product Milestones, Team Growth, Q2 Outlook</div>' },
-      { name: 'Investor Pitch — Series B', date: 'Mar 15, 2026', meta: '24 slides', badge: 'draft', badgeLabel: 'Draft', preview: '<div class="line"><span class="highlight">Series B Investor Pitch</span></div><div class="line">24 slides &middot; Narrative: path to profitability</div>' },
-    ],
-    'Spreadsheets': [
-      { name: 'Q1 Market Analysis', date: 'Apr 1, 2026', meta: '4 sheets', badge: 'final', badgeLabel: 'Final', preview: '<div class="line"><span class="highlight">Q1 Market Analysis Workbook</span></div><div class="line">Sheets: Raw Data, Pivot Tables, Charts, Executive Summary</div>' },
-    ],
-    'PDF': [
-      { name: 'Merged — Board Materials Q1', date: 'Mar 29, 2026', meta: '42 pages', badge: 'final', badgeLabel: 'Final', preview: '<div class="line"><span class="highlight">Board Materials Q1</span></div><div class="line">Merged from 6 source PDFs &middot; 42 pages</div>' },
-    ],
-    'Company Intel': [],
-    'API Builder': [
-      { name: 'Slack Bot — Market Alerts', date: 'Mar 20, 2026', meta: 'Node.js + SDK', badge: 'draft', badgeLabel: 'Draft', preview: '<div class="line"><span class="highlight">Market Alert Slack Bot</span></div><div class="line">Monitors ERCOT prices, sends alerts when thresholds exceeded</div>' },
-    ],
-    'Scheduler': [],
+  let skillHistory = {
+    'Meeting Notes': [], 'Executive Coaching': [], 'Slides': [],
+    'Spreadsheets': [], 'PDF': [], 'Company Intel': [],
+    'API Builder': [], 'Scheduler': [],
   };
+
+  async function loadHistory() {
+    try {
+      const resp = await fetch('history.json');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      Object.keys(skillHistory).forEach(k => skillHistory[k] = []);
+      for (const entry of data.entries) {
+        if (skillHistory[entry.skill]) {
+          skillHistory[entry.skill].push(entry);
+        }
+      }
+      Object.values(skillHistory).forEach(arr =>
+        arr.sort((a, b) => (b.dateISO || '').localeCompare(a.dateISO || ''))
+      );
+      if (activeSkill) {
+        document.getElementById('history-count').textContent =
+          (skillHistory[activeSkill] || []).length;
+      }
+    } catch (e) {
+      console.warn('Could not load history.json:', e);
+    }
+  }
+
+  loadHistory();
 
   function activateSkill(el, name) {
     document.querySelectorAll('.skill-card').forEach(c => {
