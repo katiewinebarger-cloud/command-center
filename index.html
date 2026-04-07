@@ -560,6 +560,32 @@
     line-height: 1.3;
   }
 
+  .skill-card.featured {
+    background: rgba(0, 188, 212, 0.06);
+    border-color: var(--accent-dim);
+    grid-row: span 1;
+  }
+
+  .skill-card.featured .skill-icon {
+    background: rgba(0, 188, 212, 0.15);
+  }
+
+  .skill-card.featured .skill-name {
+    color: var(--accent);
+  }
+
+  .skill-card.featured .featured-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    background: rgba(0, 188, 212, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 2px;
+  }
+
   /* ── Content Workbench ── */
   .workbench-layout {
     display: grid;
@@ -648,6 +674,115 @@
   .preview-content .line { padding: 2px 0; }
   .preview-content .highlight { color: var(--accent); }
   .preview-content .muted { color: var(--text-secondary); opacity: 0.5; }
+
+  /* ── Preview Tabs ── */
+  .preview-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .preview-tab {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    padding: 8px 16px 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+
+  .preview-tab:hover { color: var(--text-bright); }
+
+  .preview-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .preview-tab .tab-count {
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: var(--bg-input);
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-left: 6px;
+  }
+
+  .preview-tab.active .tab-count {
+    background: rgba(0, 188, 212, 0.12);
+    color: var(--accent);
+  }
+
+  /* ── History List ── */
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .history-item:hover {
+    background: var(--bg-panel-hover);
+    border-color: var(--accent-dim);
+  }
+
+  .history-item .history-icon {
+    font-size: 14px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+  }
+
+  .history-item .history-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .history-item .history-name {
+    font-size: 13px;
+    color: var(--text-bright);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .history-item .history-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .history-item .history-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .history-badge.sent { background: rgba(46,204,113,0.1); color: var(--green); }
+  .history-badge.draft { background: rgba(240,165,0,0.1); color: var(--amber); }
+  .history-badge.final { background: rgba(0,188,212,0.1); color: var(--accent); }
+  .history-badge.archived { background: rgba(107,122,141,0.1); color: var(--text-secondary); }
 
   /* ── Responsive ── */
   @media (max-width: 1024px) {
@@ -942,15 +1077,22 @@
   <div class="panel">
     <div class="panel-title">Cowork Skills</div>
     <div class="skills-grid">
+      <div class="skill-card featured" onclick="activateSkill(this, 'Meeting Notes')">
+        <div class="skill-icon">&#9992;</div>
+        <div class="skill-name">Meeting Takeaways</div>
+        <div class="skill-desc">Takeaways, actions &amp; Slack drafts</div>
+        <div class="featured-badge">top skill</div>
+      </div>
+      <div class="skill-card featured" onclick="activateSkill(this, 'Executive Coaching')">
+        <div class="skill-icon">&#9878;</div>
+        <div class="skill-name">Executive Coaching</div>
+        <div class="skill-desc">Leadership insights &amp; self-assessment</div>
+        <div class="featured-badge">top skill</div>
+      </div>
       <div class="skill-card" onclick="activateSkill(this, 'Slides')">
         <div class="skill-icon">&#9654;</div>
         <div class="skill-name">Slides</div>
         <div class="skill-desc">Create EQ presentations</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'Docs')">
-        <div class="skill-icon">&#9998;</div>
-        <div class="skill-name">Docs</div>
-        <div class="skill-desc">Draft Word documents</div>
       </div>
       <div class="skill-card" onclick="activateSkill(this, 'Spreadsheets')">
         <div class="skill-icon">&#9638;</div>
@@ -961,11 +1103,6 @@
         <div class="skill-icon">&#9744;</div>
         <div class="skill-name">PDF</div>
         <div class="skill-desc">Merge, split, extract</div>
-      </div>
-      <div class="skill-card" onclick="activateSkill(this, 'Meeting Notes')">
-        <div class="skill-icon">&#9992;</div>
-        <div class="skill-name">Meetings</div>
-        <div class="skill-desc">Takeaways &amp; actions</div>
       </div>
       <div class="skill-card" onclick="activateSkill(this, 'Company Intel')">
         <div class="skill-icon">&#9733;</div>
@@ -1009,7 +1146,11 @@
       <div class="preview-pane">
         <div class="preview-header">
           <span class="preview-title" id="preview-title">OUTPUT PREVIEW &mdash; DRAFT MEMO</span>
-          <span class="preview-status">READY</span>
+          <span class="preview-status" id="preview-status">READY</span>
+        </div>
+        <div class="preview-tabs" id="preview-tabs" style="display:none">
+          <button class="preview-tab active" onclick="showPreviewTab('new')">New</button>
+          <button class="preview-tab" onclick="showPreviewTab('history')">History <span class="tab-count" id="history-count">0</span></button>
         </div>
         <div class="preview-content" id="preview-content">
           <div class="line"><span class="highlight">To:</span> Leadership Team</div>
@@ -1025,8 +1166,9 @@
           <div class="line">&bull; Solar generation capacity on track for 12% YoY increase</div>
           <div class="line">&bull; Battery storage portfolio performing within 2% of forecast</div>
           <div class="line">&nbsp;</div>
-          <div class="line"><span class="muted">[ Click an action to change preview context ]</span></div>
+          <div class="line"><span class="muted">[ Click an action or skill to get started ]</span></div>
         </div>
+        <div class="history-list" id="preview-history" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -1101,29 +1243,134 @@
   }
 
   // ── Skills ──
+  let activeSkill = null;
+  let activeSkillNewContent = '';
+
+  const skillNewContent = {
+    'Meeting Notes': '<div class="line"><span class="highlight">Meeting Takeaways Engine</span></div><div class="line">Input: raw notes or transcript</div><div class="line">Output: action items, owners, deadlines</div><div class="line">Format: Slack-ready message</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Paste meeting notes to process...</span></div>',
+    'Executive Coaching': '<div class="line"><span class="highlight">Executive Coaching Suite</span></div><div class="line">&nbsp;</div><div class="line">&bull; Leadership self-assessment &amp; reflection</div><div class="line">&bull; Coaching conversation prep</div><div class="line">&bull; 360 feedback synthesis</div><div class="line">&bull; Development goal tracking</div><div class="line">&bull; Communication style insights</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Start a coaching session...</span></div>',
+    'Slides': '<div class="line"><span class="highlight">Deck initialized:</span> EQ Q2 Strategy Update</div><div class="line">Template: Equilibrium Energy branded</div><div class="line">Slides: Title, Agenda, Market Overview, Financials, Next Steps</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready to generate slide content...</span></div>',
+    'Spreadsheets': '<div class="line"><span class="highlight">Workbook:</span> market_analysis_q2.xlsx</div><div class="line">Sheets: Raw Data | Pivot | Charts | Summary</div><div class="line">Formulas: VLOOKUP, conditional formatting, sparklines</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready for data import...</span></div>',
+    'PDF': '<div class="line"><span class="highlight">PDF Tools</span></div><div class="line">&bull; Merge multiple PDFs into one</div><div class="line">&bull; Split by page range</div><div class="line">&bull; Extract text and tables</div><div class="line">&bull; Add watermarks</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Drop a file to begin...</span></div>',
+    'Company Intel': '<div class="line"><span class="highlight">EQ Knowledge Base</span></div><div class="line">&bull; Company strategy &amp; positioning</div><div class="line">&bull; Product direction &amp; roadmap</div><div class="line">&bull; Brand voice guidelines</div><div class="line">&bull; Team &amp; org context</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ask anything about EQ...</span></div>',
+    'API Builder': '<div class="line"><span class="highlight">Claude API Workspace</span></div><div class="line">SDK: @anthropic-ai/sdk (latest)</div><div class="line">Model: claude-opus-4-6</div><div class="line">Tools: function calling, streaming, batches</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Describe what you want to build...</span></div>',
+    'Scheduler': '<div class="line"><span class="highlight">Task Scheduler</span></div><div class="line">Active tasks: 3</div><div class="line">&bull; Daily market report &mdash; 7:00 AM</div><div class="line">&bull; Slack digest &mdash; every 4 hours</div><div class="line">&bull; PR review reminder &mdash; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Create a new scheduled task...</span></div>',
+  };
+
+  const skillHistory = {
+    'Meeting Notes': [
+      { name: 'Strategy Sync — Leadership Team', date: 'Apr 4, 2026', meta: '6 action items', badge: 'sent', badgeLabel: 'Sent', preview: '<div class="line"><span class="highlight">Meeting:</span> Strategy Sync w/ Leadership</div><div class="line"><span class="highlight">Date:</span> Apr 4, 2026 &middot; 9:00 AM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; Q2 revenue tracking 12% ahead of plan</div><div class="line">&bull; Battery storage margins improving — expand Houston portfolio</div><div class="line">&bull; Board deck due Apr 18 — Katie owns final draft</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Action Items:</span></div><div class="line">&bull; <strong>Katie</strong> — Finalize board deck by Apr 15</div><div class="line">&bull; <strong>Maya</strong> — Update competitive landscape slide</div><div class="line">&bull; <strong>James</strong> — Ship v2.5 staging by Apr 10</div>' },
+      { name: 'Product Roadmap Standup', date: 'Apr 3, 2026', meta: '4 action items', badge: 'sent', badgeLabel: 'Sent', preview: '<div class="line"><span class="highlight">Meeting:</span> Product Roadmap Standup</div><div class="line"><span class="highlight">Date:</span> Apr 3, 2026 &middot; 2:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; Load forecasting ML model hitting 94% accuracy</div><div class="line">&bull; Mobile app MVP pushed to May — resource constraint</div><div class="line">&bull; Customer portal v2 in QA, launch next sprint</div>' },
+      { name: 'Grid Modernization Lunch & Learn', date: 'Apr 1, 2026', meta: '2 action items', badge: 'archived', badgeLabel: 'Archived', preview: '<div class="line"><span class="highlight">Meeting:</span> Grid Modernization Lunch &amp; Learn</div><div class="line"><span class="highlight">Date:</span> Apr 1, 2026 &middot; 12:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; FERC Order 2222 opening DER aggregation opportunities</div><div class="line">&bull; Texas grid resilience investments creating tailwinds</div><div class="line">&bull; Potential partnership angle with municipal utilities</div>' },
+      { name: 'Investor Update Working Session', date: 'Mar 28, 2026', meta: '5 action items', badge: 'sent', badgeLabel: 'Sent', preview: '<div class="line"><span class="highlight">Meeting:</span> Investor Update Working Session</div><div class="line"><span class="highlight">Date:</span> Mar 28, 2026 &middot; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Key Takeaways:</span></div><div class="line">&bull; Series B narrative: profitability path + market expansion</div><div class="line">&bull; Highlight 3x growth in managed capacity YoY</div><div class="line">&bull; Include customer case study — industrial C&amp;I segment</div>' },
+    ],
+    'Executive Coaching': [
+      { name: 'Leadership Self-Assessment — Q1 Review', date: 'Apr 2, 2026', meta: 'Reflection + goals', badge: 'final', badgeLabel: 'Complete', preview: '<div class="line"><span class="highlight">Q1 Leadership Self-Assessment</span></div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Strengths identified:</span></div><div class="line">&bull; Strategic vision — team alignment improved 30%</div><div class="line">&bull; Cross-functional communication rated highly by peers</div><div class="line">&bull; Decision speed in market operations</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Growth areas:</span></div><div class="line">&bull; Delegation — tendency to stay too close to execution</div><div class="line">&bull; Saying no to low-impact meetings</div><div class="line">&bull; Building more structured 1:1 agendas</div>' },
+      { name: 'Coaching Prep — Difficult Conversation', date: 'Mar 25, 2026', meta: 'Framework + talking points', badge: 'final', badgeLabel: 'Complete', preview: '<div class="line"><span class="highlight">Coaching Prep: Difficult Conversation</span></div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Situation:</span> Performance feedback for direct report</div><div class="line"><span class="highlight">Framework:</span> SBI (Situation-Behavior-Impact)</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Talking points:</span></div><div class="line">&bull; Acknowledge strengths and recent wins first</div><div class="line">&bull; Specific examples of missed deadlines (3 in March)</div><div class="line">&bull; Collaborative goal-setting for Q2</div><div class="line">&bull; Follow-up cadence: weekly check-ins for 30 days</div>' },
+      { name: '360 Feedback Synthesis', date: 'Mar 18, 2026', meta: '8 respondents', badge: 'final', badgeLabel: 'Complete', preview: '<div class="line"><span class="highlight">360 Feedback Synthesis</span></div><div class="line"><span class="highlight">Respondents:</span> 8 (3 peers, 3 reports, 2 leadership)</div><div class="line">&nbsp;</div><div class="line"><span class="highlight">Top themes:</span></div><div class="line">&bull; "Katie brings clarity to ambiguous situations"</div><div class="line">&bull; "Strong energy market instincts"</div><div class="line">&bull; "Could delegate more to build team capacity"</div><div class="line">&bull; "Meetings she leads are efficient and well-structured"</div>' },
+    ],
+    'Slides': [
+      { name: 'Q1 Board Update Deck', date: 'Mar 30, 2026', meta: '18 slides', badge: 'final', badgeLabel: 'Final', preview: '<div class="line"><span class="highlight">Q1 Board Update Deck</span></div><div class="line">18 slides &middot; EQ branded template</div><div class="line">&nbsp;</div><div class="line">Sections: Market Overview, Financial Performance, Product Milestones, Team Growth, Q2 Outlook</div>' },
+      { name: 'Investor Pitch — Series B', date: 'Mar 15, 2026', meta: '24 slides', badge: 'draft', badgeLabel: 'Draft', preview: '<div class="line"><span class="highlight">Series B Investor Pitch</span></div><div class="line">24 slides &middot; Narrative: path to profitability</div>' },
+    ],
+    'Spreadsheets': [
+      { name: 'Q1 Market Analysis', date: 'Apr 1, 2026', meta: '4 sheets', badge: 'final', badgeLabel: 'Final', preview: '<div class="line"><span class="highlight">Q1 Market Analysis Workbook</span></div><div class="line">Sheets: Raw Data, Pivot Tables, Charts, Executive Summary</div>' },
+    ],
+    'PDF': [
+      { name: 'Merged — Board Materials Q1', date: 'Mar 29, 2026', meta: '42 pages', badge: 'final', badgeLabel: 'Final', preview: '<div class="line"><span class="highlight">Board Materials Q1</span></div><div class="line">Merged from 6 source PDFs &middot; 42 pages</div>' },
+    ],
+    'Company Intel': [],
+    'API Builder': [
+      { name: 'Slack Bot — Market Alerts', date: 'Mar 20, 2026', meta: 'Node.js + SDK', badge: 'draft', badgeLabel: 'Draft', preview: '<div class="line"><span class="highlight">Market Alert Slack Bot</span></div><div class="line">Monitors ERCOT prices, sends alerts when thresholds exceeded</div>' },
+    ],
+    'Scheduler': [],
+  };
+
   function activateSkill(el, name) {
-    document.querySelectorAll('.skill-card').forEach(c => c.style.borderColor = '');
+    document.querySelectorAll('.skill-card').forEach(c => {
+      if (!c.classList.contains('featured')) c.style.borderColor = '';
+      else c.style.borderColor = '';
+    });
     el.style.borderColor = 'var(--accent)';
-    const preview = document.getElementById('preview-content');
+
+    activeSkill = name;
+    activeSkillNewContent = skillNewContent[name] || '';
+
     const title = document.getElementById('preview-title');
+    const tabs = document.getElementById('preview-tabs');
+    const count = document.getElementById('history-count');
+    const history = skillHistory[name] || [];
+
     title.textContent = `OUTPUT PREVIEW \u2014 ${name.toUpperCase()}`;
-    const messages = {
-      'Slides': '<div class="line"><span class="highlight">Deck initialized:</span> EQ Q2 Strategy Update</div><div class="line">Template: Equilibrium Energy branded</div><div class="line">Slides: Title, Agenda, Market Overview, Financials, Next Steps</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready to generate slide content...</span></div>',
-      'Docs': '<div class="line"><span class="highlight">Document ready</span></div><div class="line">Format: .docx with EQ formatting</div><div class="line">Sections: Header, Executive Summary, Body, Appendix</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Awaiting content input...</span></div>',
-      'Spreadsheets': '<div class="line"><span class="highlight">Workbook:</span> market_analysis_q2.xlsx</div><div class="line">Sheets: Raw Data | Pivot | Charts | Summary</div><div class="line">Formulas: VLOOKUP, conditional formatting, sparklines</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ready for data import...</span></div>',
-      'PDF': '<div class="line"><span class="highlight">PDF Tools</span></div><div class="line">&bull; Merge multiple PDFs into one</div><div class="line">&bull; Split by page range</div><div class="line">&bull; Extract text and tables</div><div class="line">&bull; Add watermarks</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Drop a file to begin...</span></div>',
-      'Meeting Notes': '<div class="line"><span class="highlight">Meeting Takeaways Engine</span></div><div class="line">Input: raw notes or transcript</div><div class="line">Output: action items, owners, deadlines</div><div class="line">Format: Slack-ready message</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Paste meeting notes to process...</span></div>',
-      'Company Intel': '<div class="line"><span class="highlight">EQ Knowledge Base</span></div><div class="line">&bull; Company strategy &amp; positioning</div><div class="line">&bull; Product direction &amp; roadmap</div><div class="line">&bull; Brand voice guidelines</div><div class="line">&bull; Team &amp; org context</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Ask anything about EQ...</span></div>',
-      'API Builder': '<div class="line"><span class="highlight">Claude API Workspace</span></div><div class="line">SDK: @anthropic-ai/sdk (latest)</div><div class="line">Model: claude-opus-4-6</div><div class="line">Tools: function calling, streaming, batches</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Describe what you want to build...</span></div>',
-      'Scheduler': '<div class="line"><span class="highlight">Task Scheduler</span></div><div class="line">Active tasks: 3</div><div class="line">&bull; Daily market report &mdash; 7:00 AM</div><div class="line">&bull; Slack digest &mdash; every 4 hours</div><div class="line">&bull; PR review reminder &mdash; 3:00 PM</div><div class="line">&nbsp;</div><div class="line"><span class="muted">Create a new scheduled task...</span></div>',
-    };
-    preview.innerHTML = messages[name] || '<div class="line"><span class="muted">Select a skill to preview...</span></div>';
+    tabs.style.display = 'flex';
+    count.textContent = history.length;
+
+    showPreviewTab('new');
+  }
+
+  function showPreviewTab(tab) {
+    const content = document.getElementById('preview-content');
+    const historyEl = document.getElementById('preview-history');
+    const status = document.getElementById('preview-status');
+    const tabs = document.querySelectorAll('.preview-tab');
+
+    tabs.forEach(t => t.classList.remove('active'));
+
+    if (tab === 'new') {
+      tabs[0].classList.add('active');
+      content.style.display = '';
+      historyEl.style.display = 'none';
+      content.innerHTML = activeSkillNewContent;
+      status.textContent = 'READY';
+    } else {
+      tabs[1].classList.add('active');
+      content.style.display = 'none';
+      historyEl.style.display = '';
+      status.textContent = 'HISTORY';
+
+      const items = skillHistory[activeSkill] || [];
+      if (items.length === 0) {
+        historyEl.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:20px 0;text-align:center;opacity:0.5;">No history yet for this skill.</div>';
+      } else {
+        historyEl.innerHTML = items.map((item, i) => `
+          <div class="history-item" onclick="viewHistoryItem('${activeSkill}', ${i})">
+            <div class="history-icon">&#9724;</div>
+            <div class="history-info">
+              <div class="history-name">${item.name}</div>
+              <div class="history-meta">${item.date} &middot; ${item.meta}</div>
+            </div>
+            <span class="history-badge ${item.badge}">${item.badgeLabel}</span>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  function viewHistoryItem(skill, index) {
+    const item = skillHistory[skill][index];
+    const content = document.getElementById('preview-content');
+    const historyEl = document.getElementById('preview-history');
+    const title = document.getElementById('preview-title');
+    const status = document.getElementById('preview-status');
+
+    title.textContent = `${skill.toUpperCase()} \u2014 ${item.name}`;
+    status.textContent = item.badgeLabel.toUpperCase();
+    content.style.display = '';
+    historyEl.style.display = 'none';
+    content.innerHTML = item.preview + '<div class="line">&nbsp;</div><div class="line"><span class="muted" style="cursor:pointer" onclick="showPreviewTab(\'history\')">&larr; Back to history</span></div>';
   }
 
   // ── Workbench Actions ──
   function setAction(el, action) {
     document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
+    // Reset skill state and hide tabs
+    activeSkill = null;
+    document.getElementById('preview-tabs').style.display = 'none';
+    document.getElementById('preview-history').style.display = 'none';
+    document.getElementById('preview-content').style.display = '';
+    document.getElementById('preview-status').textContent = 'READY';
+    document.querySelectorAll('.skill-card').forEach(c => c.style.borderColor = '');
     const title = document.getElementById('preview-title');
     const preview = document.getElementById('preview-content');
     const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
