@@ -1,0 +1,41 @@
+{
+  "lastUpdated": "2026-04-08T07:00:00-05:00",
+  "channels": [
+    {
+      "name": "#general",
+      "unread": 3,
+      "mention": false,
+      "latest": {
+        "sender": "Alex M.",
+        "initials": "AM",
+        "color": "#2ecc71",
+        "time": "11:42a",
+        "text": "Team offsite logistics doc shared — please review by EOD"
+      }
+    },
+    {
+      "name": "#engineering",
+      "unread": 5,
+      "mention": true,
+      "latest": {
+        "sender": "Sam R.",
+        "initials": "SR",
+        "color": "#9b59b6",
+        "time": "10:15a",
+        "text": "@you Deployment pipeline is green — v2.1 is live"
+      }
+    },
+    {
+      "name": "#product",
+      "unread": 1,
+      "mention": false,
+      "latest": {
+        "sender": "Jordan K.",
+        "initials": "JK",
+        "color": "#e74c3c",
+        "time": "9:30a",
+        "text": "Q2 roadmap draft posted for review — feedback welcome"
+      }
+    }
+  ]
+}

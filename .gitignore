@@ -1,1 +1,20 @@
+# Personal config (contains API key)
 config.js
+
+# Personal data files (populated by scheduled task or manually)
+calendar.json
+slack-pulse.json
+history.json
+
+# System files
+.DS_Store
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+
+# Personal content folders
+Historical Content/
+Self-Assessment/
+session-history/

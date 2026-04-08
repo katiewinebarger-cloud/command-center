@@ -1,0 +1,29 @@
+{
+  "date": "2026-04-08",
+  "lastUpdated": "2026-04-08T07:00:00-05:00",
+  "events": [
+    {
+      "time": "9:00a",
+      "endTime": "9:30a",
+      "title": "Morning standup",
+      "type": "meeting",
+      "link": "https://calendar.google.com"
+    },
+    {
+      "time": "10:00a",
+      "endTime": "11:00a",
+      "title": "Strategy review",
+      "type": "meeting",
+      "link": "https://calendar.google.com",
+      "organizer": "Alex M.",
+      "attendees": 5
+    },
+    {
+      "time": "2:00p",
+      "endTime": "2:30p",
+      "title": "1:1 with manager",
+      "type": "meeting",
+      "link": "https://calendar.google.com"
+    }
+  ]
+}

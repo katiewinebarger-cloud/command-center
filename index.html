@@ -1504,7 +1504,7 @@
   <header class="header">
     <div class="header-left">
       <h1><span class="prompt">&gt;</span> Command Center</h1>
-      <div class="subtitle" id="greeting-text">Good morning, Katie.</div>
+      <div class="subtitle" id="greeting-text">Good morning.</div>
     </div>
     <div class="header-right">
       <div class="header-meta">
@@ -1832,7 +1832,8 @@
     let g = 'Good evening';
     if (h < 12) g = 'Good morning';
     else if (h < 17) g = 'Good afternoon';
-    document.getElementById('greeting-text').textContent = `${g}, Katie.`;
+    const name = (typeof CONFIG !== 'undefined' && CONFIG.USER_NAME) ? CONFIG.USER_NAME : '';
+    document.getElementById('greeting-text').textContent = name ? `${g}, ${name}.` : `${g}.`;
   }
 
   updateClock();
@@ -1841,20 +1842,26 @@
   setInterval(updateClock, 1000);
   setInterval(() => { updateDate(); updateGreeting(); }, 60000);
 
-  // ── Weather (Open-Meteo, San Francisco) ──
+  // ── Weather (Open-Meteo) ──
   async function loadWeather() {
     const el = document.getElementById('weather-display');
+    const lat = (typeof CONFIG !== 'undefined' && CONFIG.WEATHER_LAT) || 37.7749;
+    const lon = (typeof CONFIG !== 'undefined' && CONFIG.WEATHER_LON) || -122.4194;
+    const city = (typeof CONFIG !== 'undefined' && CONFIG.WEATHER_CITY) || 'San Francisco';
+    const unit = (typeof CONFIG !== 'undefined' && CONFIG.WEATHER_UNIT) || 'fahrenheit';
+    const tz = (typeof CONFIG !== 'undefined' && CONFIG.WEATHER_TIMEZONE) || 'America/Los_Angeles';
+    const degSymbol = unit === 'celsius' ? '\u00B0C' : '\u00B0F';
     try {
-      const url = 'https://api.open-meteo.com/v1/forecast?latitude=37.7749&longitude=-122.4194&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=America/Los_Angeles';
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&temperature_unit=${unit}&timezone=${tz}`;
       const resp = await fetch(url);
       if (!resp.ok) throw new Error('Weather API error');
       const data = await resp.json();
       const temp = Math.round(data.current.temperature_2m);
       const code = data.current.weather_code;
       const condition = weatherCondition(code);
-      el.textContent = `${temp}\u00B0F \u00B7 ${condition} \u00B7 San Francisco`;
+      el.textContent = `${temp}${degSymbol} \u00B7 ${condition} \u00B7 ${city}`;
     } catch (e) {
-      el.textContent = '-- \u00B7 San Francisco';
+      el.textContent = `-- \u00B7 ${city}`;
       console.warn('Weather fetch failed:', e);
     }
   }
@@ -1878,7 +1885,7 @@
   // ── Calendar Loading ──
   async function loadCalendar() {
     try {
-      const resp = await fetch('calendar.json');
+      const resp = await fetch('calendar.json?t=' + Date.now());
       if (!resp.ok) return;
       const data = await resp.json();
       const events = data.events || [];
@@ -1918,7 +1925,7 @@
   // ── Slack Pulse Loading ──
   async function loadSlack() {
     try {
-      const resp = await fetch('slack-pulse.json');
+      const resp = await fetch('slack-pulse.json?t=' + Date.now());
       if (!resp.ok) return;
       const data = await resp.json();
       const channels = data.channels || [];
@@ -2094,7 +2101,7 @@
 
   async function loadSkills() {
     try {
-      const resp = await fetch('skills.json');
+      const resp = await fetch('skills.json?t=' + Date.now());
       if (!resp.ok) return;
       const data = await resp.json();
       skillsData = data.skills || [];
@@ -2139,7 +2146,7 @@
 
   async function loadHistory() {
     try {
-      const resp = await fetch('history.json');
+      const resp = await fetch('history.json?t=' + Date.now());
       if (!resp.ok) return;
       const data = await resp.json();
       skillHistory = {};
