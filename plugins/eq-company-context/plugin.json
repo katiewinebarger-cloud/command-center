@@ -1,0 +1,9 @@
+{
+  "name": "eq-company-context",
+  "version": "0.1.0",
+  "description": "Equilibrium Energy company context — pulls from the AI-CONTEXT-COMPANY Google Drive vault to ground Claude in EQ's strategy, product, brand, culture, and more.",
+  "author": {
+    "name": "Equilibrium Energy"
+  },
+  "keywords": ["equilibrium", "eq", "company-context", "internal"]
+}

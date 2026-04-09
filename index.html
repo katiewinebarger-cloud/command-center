@@ -2206,23 +2206,30 @@
 
     // Show the run interface
     if (skill.system) {
-      inputRow.style.display = 'flex';
-      input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
-      input.value = '';
+      if (hasApiKey()) {
+        // API key available — show input form for in-dashboard generation
+        inputRow.style.display = 'flex';
+        input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
+        input.value = '';
 
-      if (skill.prompt && !skill.historySkill) {
-        // Has a default prompt and no history — auto-run
-        body.innerHTML = '<div class="skill-loading"><div class="spinner"></div>Generating with Claude...</div>';
-        panel.classList.add('open');
-        executeSkill(skill, skill.prompt, '');
+        if (skill.prompt && !skill.historySkill) {
+          body.innerHTML = '<div class="skill-loading"><div class="spinner"></div>Generating with Claude...</div>';
+          panel.classList.add('open');
+          executeSkill(skill, skill.prompt, '');
+        } else {
+          body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter ${skill.inputLabel ? skill.inputLabel.toLowerCase() : 'a prompt'} above and click Generate.</p>`;
+          panel.classList.add('open');
+          input.focus();
+        }
       } else {
-        body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter ${skill.inputLabel ? skill.inputLabel.toLowerCase() : 'a prompt'} above and click Generate.</p>`;
+        // No API key — show Claude Code launch option
+        inputRow.style.display = 'none';
+        showCoworkFallback(skill, skill.coworkCommand || skill.prompt || skill.name);
         panel.classList.add('open');
-        input.focus();
       }
     } else {
       inputRow.style.display = 'none';
-      body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">This skill is not yet configured for API generation.</p>`;
+      body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">This skill is not yet configured.</p>`;
       panel.classList.add('open');
     }
   }
@@ -2242,11 +2249,17 @@
 
     if (tab === 'run') {
       tabBtns[0].classList.add('active');
-      inputRow.style.display = 'flex';
-      input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
-      if (!lastSkillOutput) {
+      if (hasApiKey()) {
+        inputRow.style.display = 'flex';
+        input.placeholder = skill.inputPlaceholder || 'Describe what you need...';
+        if (!lastSkillOutput) {
+          copyBtn.parentElement.style.display = 'none';
+          body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter ${skill.inputLabel ? skill.inputLabel.toLowerCase() : 'a prompt'} above and click Generate.</p>`;
+        }
+      } else {
+        inputRow.style.display = 'none';
         copyBtn.parentElement.style.display = 'none';
-        body.innerHTML = `<p style="color:var(--text-secondary);opacity:0.5;">Enter ${skill.inputLabel ? skill.inputLabel.toLowerCase() : 'a prompt'} above and click Generate.</p>`;
+        showCoworkFallback(skill, skill.coworkCommand || skill.prompt || skill.name);
       }
     } else {
       tabBtns[1].classList.add('active');
@@ -2298,13 +2311,42 @@
     runSkill();
   }
 
+  function hasApiKey() {
+    return typeof CONFIG !== 'undefined' && CONFIG.ANTHROPIC_API_KEY && CONFIG.ANTHROPIC_API_KEY !== 'YOUR_API_KEY_HERE';
+  }
+
+  function showCoworkFallback(skill, prompt) {
+    const body = document.getElementById('skill-output-body');
+    const cmd = skill.coworkCommand || prompt;
+    const isSlash = cmd.startsWith('/');
+    const displayCmd = isSlash ? cmd : `"${cmd}"`;
+    const copyText = isSlash ? cmd : cmd;
+
+    body.innerHTML = `
+      <div style="text-align:center;padding:20px 0;">
+        <div style="font-size:13px;color:var(--text-primary);margin-bottom:12px;">
+          Run this skill in <strong style="color:var(--accent);">Claude Code</strong>
+        </div>
+        <div style="background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:inline-block;font-family:var(--font-mono);font-size:13px;color:var(--accent);margin-bottom:12px;cursor:pointer;transition:all 0.15s;"
+             onclick="navigator.clipboard.writeText('${escapeHtml(copyText)}').then(()=>{this.style.borderColor='var(--green)';this.innerHTML='Copied! Paste in Claude Code &rarr;';setTimeout(()=>{this.style.borderColor='var(--border)';this.innerHTML='${escapeHtml(displayCmd)}'},2000)})"
+             title="Click to copy">
+          ${escapeHtml(displayCmd)}
+        </div>
+        <div style="font-size:11px;color:var(--text-secondary);line-height:1.6;">
+          Click to copy, then paste into your Claude Code terminal.<br>
+          ${!isSlash ? '<span style="opacity:0.5;">Or type your own prompt — Claude Code has this skill built in.</span>' : '<span style="opacity:0.5;">This runs the full Cowork skill with file output, Slack drafts, and more.</span>'}
+        </div>
+      </div>
+    `;
+  }
+
   async function executeSkill(skill, prompt, context) {
     const body = document.getElementById('skill-output-body');
     const btn = document.getElementById('skill-run-btn');
     const actionsEl = document.getElementById('skill-copy-btn').parentElement;
 
-    if (typeof CONFIG === 'undefined' || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
-      body.innerHTML = '<div class="action-error">API key not configured. Add your key to <code>config.js</code>.</div>';
+    if (!hasApiKey()) {
+      showCoworkFallback(skill, prompt);
       return;
     }
 
@@ -2443,10 +2485,19 @@
     const title = document.getElementById('action-output-title');
 
     // Check API key
-    if (typeof CONFIG === 'undefined' || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
+    if (!hasApiKey()) {
       output.classList.add('visible');
       title.textContent = config.label;
-      body.innerHTML = '<div class="action-error">API key not configured. Add your key to <code>config.js</code>.</div>';
+      const copyCmd = `Write a ${config.label.toLowerCase()}: ${prompt}`;
+      body.innerHTML = `
+        <div style="text-align:center;padding:16px 0;">
+          <div style="font-size:13px;color:var(--text-primary);margin-bottom:10px;">Run in <strong style="color:var(--accent);">Claude Code</strong></div>
+          <div style="background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;display:inline-block;font-family:var(--font-mono);font-size:12px;color:var(--accent);cursor:pointer;max-width:90%;text-align:left;transition:all 0.15s;"
+               onclick="navigator.clipboard.writeText(this.textContent.trim()).then(()=>{this.style.borderColor='var(--green)';setTimeout(()=>this.style.borderColor='var(--border)',2000)})"
+               title="Click to copy">${escapeHtml(copyCmd)}</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">Click to copy, then paste into Claude Code.</div>
+        </div>
+      `;
       return;
     }
 

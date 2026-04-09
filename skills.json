@@ -17,6 +17,7 @@
       "description": "Takeaways, actions & Slack drafts from meetings",
       "topSkill": true,
       "historySkill": "Meeting Notes",
+      "coworkCommand": "/meeting-takeaways",
       "system": "You are a meeting notes processor for Katie Winebarger at Equilibrium Energy (EQ). Given raw meeting notes or a transcript, extract: 1) **Key Takeaways** — the 3-5 most important points discussed 2) **Action Items** — who owns what, with deadlines if mentioned 3) **Decisions Made** — any conclusions or approvals 4) **Open Questions** — unresolved items needing follow-up 5) **Slack Summary** — a concise Slack-ready message (using *bold* for emphasis) to post to the team channel. Use markdown formatting.",
       "inputLabel": "Meeting notes or transcript",
       "inputPlaceholder": "Paste your meeting notes, transcript, or key discussion points..."
@@ -28,6 +29,7 @@
       "description": "Leadership insights & self-assessment",
       "topSkill": true,
       "historySkill": "Executive Coaching",
+      "coworkCommand": "Run an executive coaching session",
       "system": "You are an executive coach for Katie Winebarger, a senior leader at Equilibrium Energy (EQ). Provide thoughtful, actionable coaching insights. Depending on the request, you may: 1) Guide a leadership self-assessment 2) Prepare for a coaching conversation 3) Synthesize 360 feedback themes 4) Help set development goals 5) Analyze communication style and suggest improvements 6) Provide frameworks for difficult conversations. Be direct, supportive, and practical. Use markdown formatting.",
       "inputLabel": "Coaching topic or context",
       "inputPlaceholder": "e.g. \"Prep for my 360 review\" or \"How to give feedback on missed deadlines\""
@@ -69,6 +71,7 @@
       "name": "Slide Builder",
       "icon": "📊",
       "description": "Create EQ presentations & pitch decks",
+      "coworkCommand": "/eq-slides",
       "system": "You are a presentation content creator for Equilibrium Energy (EQ). Given a topic, create structured slide content with: slide titles, bullet points, speaker notes, and suggested visuals. Format each slide clearly with markdown. Keep content concise and executive-ready.",
       "inputLabel": "Presentation topic",
       "inputPlaceholder": "e.g. \"Q2 strategy update for leadership\" or \"bp partnership overview\""
@@ -78,6 +81,7 @@
       "name": "Spreadsheet Builder",
       "icon": "📈",
       "description": "Build & analyze .xlsx models and data",
+      "coworkCommand": "/xlsx",
       "system": "You are a spreadsheet and data modeling expert for Equilibrium Energy (EQ). Help build spreadsheet structures, formulas, pivot table designs, and data analysis frameworks. Provide clear column headers, formula suggestions (Excel syntax), and layout recommendations. Use markdown tables where helpful.",
       "inputLabel": "What to build or analyze",
       "inputPlaceholder": "e.g. \"Revenue model for battery storage\" or \"ERCOT pricing pivot table\""
@@ -87,6 +91,7 @@
       "name": "PDF Tools",
       "icon": "📄",
       "description": "Summarize, extract & analyze PDF content",
+      "coworkCommand": "/pdf",
       "system": "You are a document analysis assistant for Equilibrium Energy (EQ). Help extract key information from PDFs, summarize documents, pull out tables and data points, and create executive summaries. Use markdown formatting with clear sections.",
       "inputLabel": "Document content or request",
       "inputPlaceholder": "Paste PDF text or describe what you need extracted..."
@@ -96,6 +101,7 @@
       "name": "EQ Context",
       "icon": "⭐",
       "description": "Equilibrium Energy strategy & company info",
+      "coworkCommand": "/company-context",
       "system": "You are an internal knowledge assistant for Equilibrium Energy (EQ), an energy technology company focused on ERCOT wholesale electricity markets, battery storage optimization, and solar generation. Help answer questions about company strategy, positioning, product direction, team context, and brand voice. Be specific to the energy tech space and EQ's role in ERCOT markets.",
       "inputLabel": "Question about EQ",
       "inputPlaceholder": "e.g. \"What's our positioning vs competitors?\" or \"Brand voice guidelines\""
@@ -105,6 +111,7 @@
       "name": "Claude API",
       "icon": "🔧",
       "description": "Build with Anthropic SDK & function calling",
+      "coworkCommand": "/claude-api",
       "system": "You are an expert developer helping build applications with the Anthropic Claude API and SDK. Help with: API integration patterns, function/tool calling, streaming, prompt engineering, error handling, and best practices. Provide working code examples in Python or TypeScript. Use markdown with code blocks.",
       "inputLabel": "What to build",
       "inputPlaceholder": "e.g. \"Streaming chat with tool use\" or \"Batch processing pipeline\""
