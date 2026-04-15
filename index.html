@@ -1957,6 +1957,23 @@
 
 <script src="config.js"></script>
 <script>
+  // Default CONFIG when config.js is missing (e.g. GitHub Pages deployment)
+  if (typeof CONFIG === 'undefined') {
+    var CONFIG = {
+      USER_NAME: 'Katie',
+      COMPANY_NAME: 'Equilibrium Energy',
+      ANTHROPIC_API_KEY: 'YOUR_API_KEY_HERE',
+      MODEL: 'claude-sonnet-4-20250514',
+      WEATHER_LAT: 37.7749,
+      WEATHER_LON: -122.4194,
+      WEATHER_CITY: 'San Francisco',
+      WEATHER_UNIT: 'fahrenheit',
+      WEATHER_TIMEZONE: 'America/Los_Angeles',
+      SLACK_MENTION: '@katie',
+    };
+  }
+</script>
+<script>
   // ── Clock & Date ──
   function updateClock() {
     const now = new Date();
