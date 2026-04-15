@@ -102,6 +102,131 @@
     letter-spacing: 1px;
   }
 
+  /* ── Settings Button ── */
+  .settings-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .settings-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── Settings Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 420px;
+    max-width: 90vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text-bright);
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--text-bright); }
+  .modal-body { padding: 20px; }
+  .modal-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .modal-hint {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+  .modal-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .modal-input {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    outline: none;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-toggle-vis {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    width: 40px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .modal-toggle-vis:hover { border-color: var(--accent); }
+  .modal-status {
+    font-size: 12px;
+    min-height: 18px;
+    margin-bottom: 16px;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .modal-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .modal-btn.secondary {
+    background: none;
+    color: var(--text-secondary);
+  }
+  .modal-btn.secondary:hover { color: var(--red); border-color: var(--red); }
+  .modal-btn.primary {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  .modal-btn.primary:hover { opacity: 0.85; }
+
   /* ── Summary Cards Row ── */
   .summary-row {
     display: grid;
@@ -1512,8 +1637,32 @@
         <div class="weather" id="weather-display">Loading weather...</div>
       </div>
       <div class="clock" id="clock-display"></div>
+      <button class="settings-btn" onclick="openSettings()" title="Settings">&#9881;</button>
     </div>
   </header>
+
+  <!-- ── Settings Modal ── -->
+  <div class="modal-overlay" id="settings-overlay" onclick="if(event.target===this)closeSettings()">
+    <div class="modal">
+      <div class="modal-header">
+        <span>Settings</span>
+        <button class="modal-close" onclick="closeSettings()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label class="modal-label" for="api-key-input">Claude API Key</label>
+        <p class="modal-hint">Stored in your browser only — never sent to GitHub.</p>
+        <div class="modal-input-row">
+          <input type="password" id="api-key-input" class="modal-input" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+          <button class="modal-toggle-vis" onclick="toggleKeyVisibility()" title="Show/hide key">&#128065;</button>
+        </div>
+        <div class="modal-status" id="api-key-status"></div>
+        <div class="modal-actions">
+          <button class="modal-btn secondary" onclick="clearApiKey()">Clear Key</button>
+          <button class="modal-btn primary" onclick="saveApiKey()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Summary Cards ── -->
   <div class="summary-row">
@@ -2311,8 +2460,55 @@
     runSkill();
   }
 
+  function getApiKey() {
+    const stored = localStorage.getItem('cc_api_key');
+    if (stored) return stored;
+    if (typeof CONFIG !== 'undefined' && CONFIG.ANTHROPIC_API_KEY && CONFIG.ANTHROPIC_API_KEY !== 'YOUR_API_KEY_HERE') return CONFIG.ANTHROPIC_API_KEY;
+    return null;
+  }
+
   function hasApiKey() {
-    return typeof CONFIG !== 'undefined' && CONFIG.ANTHROPIC_API_KEY && CONFIG.ANTHROPIC_API_KEY !== 'YOUR_API_KEY_HERE';
+    return !!getApiKey();
+  }
+
+  function openSettings() {
+    const overlay = document.getElementById('settings-overlay');
+    const input = document.getElementById('api-key-input');
+    const status = document.getElementById('api-key-status');
+    const stored = localStorage.getItem('cc_api_key');
+    input.value = stored || '';
+    input.type = 'password';
+    status.textContent = stored ? '✓ Key saved in this browser' : '';
+    status.style.color = stored ? 'var(--green)' : '';
+    overlay.classList.add('open');
+  }
+
+  function closeSettings() {
+    document.getElementById('settings-overlay').classList.remove('open');
+  }
+
+  function toggleKeyVisibility() {
+    const input = document.getElementById('api-key-input');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function saveApiKey() {
+    const input = document.getElementById('api-key-input');
+    const status = document.getElementById('api-key-status');
+    const key = input.value.trim();
+    if (!key) { status.textContent = 'Please enter a key.'; status.style.color = 'var(--amber)'; return; }
+    localStorage.setItem('cc_api_key', key);
+    status.textContent = '✓ Saved — skills are now active!';
+    status.style.color = 'var(--green)';
+    setTimeout(closeSettings, 800);
+  }
+
+  function clearApiKey() {
+    localStorage.removeItem('cc_api_key');
+    document.getElementById('api-key-input').value = '';
+    const status = document.getElementById('api-key-status');
+    status.textContent = 'Key cleared.';
+    status.style.color = 'var(--text-secondary)';
   }
 
   function showCoworkFallback(skill, prompt) {
@@ -2358,7 +2554,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': CONFIG.ANTHROPIC_API_KEY,
+          'x-api-key': getApiKey(),
           'anthropic-version': '2023-06-01',
           'anthropic-dangerous-direct-browser-access': 'true',
         },
@@ -2517,7 +2713,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': CONFIG.ANTHROPIC_API_KEY,
+          'x-api-key': getApiKey(),
           'anthropic-version': '2023-06-01',
           'anthropic-dangerous-direct-browser-access': 'true',
         },
