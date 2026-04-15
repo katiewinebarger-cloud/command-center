@@ -1,9 +1,7 @@
 # Personal config (contains API key)
 config.js
 
-# Personal data files (populated by scheduled task or manually)
-calendar.json
-slack-pulse.json
+# History (skill run history)
 history.json
 
 # System files

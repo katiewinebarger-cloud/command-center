@@ -1,44 +1,6 @@
 {
-  "date": "2026-04-07",
-  "lastUpdated": "2026-04-07T09:50:00-05:00",
-  "events": [
-    {
-      "time": "8:00a",
-      "endTime": "8:15a",
-      "title": "Post forecast data",
-      "type": "task",
-      "link": "https://www.google.com/calendar/event?eid=N3JkMGpvbW9pZmJwaGI1MTN2a2RobXJnNWpfMjAyNjA0MDdUMTMwMDAwWiBrYXRpZS53aW5lYmFyZ2VyQGVxdWlsaWJyaXVtZW5lcmd5LmNvbQ&ctz=America/Chicago"
-    },
-    {
-      "time": "10:00a",
-      "endTime": "1:00p",
-      "title": "2026 EQ Strategy Days (1 of 2)",
-      "type": "meeting",
-      "link": "https://www.google.com/calendar/event?eid=M3A1b2duaDFkdjZkajVoNGYxdTltcHR1bGYga2F0aWUud2luZWJhcmdlckBlcXVpbGlicml1bWVuZXJneS5jb20&ctz=America/Chicago",
-      "organizer": "Meredith Delich"
-    },
-    {
-      "time": "1:00p",
-      "endTime": "1:30p",
-      "title": "Solutions Arch & Delivery Command Center",
-      "type": "meeting",
-      "link": "https://www.google.com/calendar/event?eid=NHBxNTluZmNkZG1rcGxncGFrNzI0NnRkM2dfMjAyNjA0MDdUMTcwMDAwWiBrYXRpZS53aW5lYmFyZ2VyQGVxdWlsaWJyaXVtZW5lcmd5LmNvbQ&ctz=America/Chicago",
-      "attendees": 20
-    },
-    {
-      "time": "2:00p",
-      "endTime": "2:30p",
-      "title": "bp commercial entry",
-      "type": "meeting",
-      "link": "https://www.google.com/calendar/event?eid=NWN2b2Nsam5jNXI4Z3F2dWZtNjE5Z2FhM3Qga2F0aWUud2luZWJhcmdlckBlcXVpbGlicml1bWVuZXJneS5jb20&ctz=America/Chicago",
-      "attendees": 4
-    },
-    {
-      "time": "3:30p",
-      "endTime": "4:00p",
-      "title": "Katie <> Lydia Check In",
-      "type": "meeting",
-      "link": "https://www.google.com/calendar/event?eid=ZTFoNW05YzA2bzdlYnRwczEzM2w1Nmd0amVfMjAyNjA0MDZUMjAwMDAwWiBrYXRpZS53aW5lYmFyZ2VyQGVxdWlsaWJyaXVtZW5lcmd5LmNvbQ&ctz=America/Chicago"
-    }
-  ]
+  "date": "2026-04-15",
+  "lastUpdated": "2026-04-15T09:00:00-05:00",
+  "fetchError": "gcal_list_events MCP tool not available in this session",
+  "events": []
 }
